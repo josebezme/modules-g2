@@ -17,6 +17,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.common.base.Functions;
+import com.google.common.collect.Ordering;
+
 public class RelativeUsages {
 	private static HashMap<String, TagUsage> urlsToTagUsages;
 	
@@ -104,28 +107,11 @@ public class RelativeUsages {
 	private static void displayPretty(TagUsage tu) {
 		ArrayList<String> keys = new ArrayList<String>();
 		keys.addAll(tu.getTags());
-		Collections.sort(keys, new ValueComparator(tu.tagUsage));
-		
+		Collections.sort(keys, Ordering.natural().reverse().onResultOf(Functions.forMap(tu.tagUsage)));
+
 		int count = tu.getTotalCount();
 		for(String tag : keys) {
 			System.out.printf("%s\t\t%.2f\n", tag, tu.getCount(tag) / (double) count);
 		}
-	}
-	
-	/* Jacked from http://stackoverflow.com/questions/109383/how-to-sort-a-mapkey-value-on-the-values-in-java */
-	static class ValueComparator implements Comparator<String> {
-	    Map<String, Integer> base;
-	    public ValueComparator(Map<String, Integer> base) {
-	        this.base = base;
-	    }
-
-	    // Note: this comparator imposes orderings that are inconsistent with equals.    
-	    public int compare(String a, String b) {
-	        if (base.get(a) >= base.get(b)) {
-	            return -1;
-	        } else {
-	            return 1;
-	        } // returning 0 would merge keys
-	    }
 	}
 }
