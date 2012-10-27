@@ -86,7 +86,7 @@ public class C1TitleExtractor {
 		return potentialTitles;
 	}
 
-	public static boolean likelyCourseName(final String text) {
+	private static boolean likelyCourseName(final String text) {
 		final String textLow = text.toLowerCase();
 		final String textTrim = text.trim();
 		if (textTrim.length() <= 4)
