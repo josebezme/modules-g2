@@ -2,7 +2,10 @@ package g2.util;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
@@ -20,21 +23,21 @@ public class C1TitleExtractor {
 	public static void main(String[] args) throws Exception {
 		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
 		
-		Multimap<String, String> titles = extractTitles(urls);
+		Multimap<String, Element> titles = extractTitles(urls);
 		
 		for(String key: titles.keySet()) {
 			System.out.println("host: " + key);
-			for(String course : titles.get(key)) {
-				System.out.println("\t" + course);
+			for(Element course : titles.get(key)) {
+				System.out.println("\t" + course.text());
 			}
 		}
 	}
 
-	public static Multimap<String, String> extractTitles(String[] urls) {
-		Multimap<String, String> titles = LinkedHashMultimap.create();
+	public static Multimap<String, Element> extractTitles(String[] urls) {
+		Multimap<String, Element> titles = LinkedHashMultimap.create();
 		
 		String host;
-		Set<String> potentialTitles;
+		Set<Element> potentialTitles;
 		for(String url : urls) {
 			try {
 				host = Utils.getHost(url);
@@ -55,31 +58,43 @@ public class C1TitleExtractor {
 		return titles;
 	}
 
-	private static Set<String> process(String url) throws IOException {
+	private static Set<Element> process(String url) throws IOException {
 		Document doc = Jsoup.connect(url).get();
 		Elements paragraphs = doc.select("p");
 		System.out.println("===" + url + "===");
 		
-		Set<String> potentialTitles = new HashSet<String>();
+		Set<Element> potentialTitles = new HashSet<Element>();
 
+		HashMap<Element, Element> potentialTitleToDescription =
+				new HashMap<Element, Element>();
+		
 		for (int i = 0; i < paragraphs.size(); i++) {
-			Elements possible = new Elements();
 			{
 				Element paragraph = paragraphs.get(i);
 				Elements strong = paragraph.select("strong");
 				Elements bold = paragraph.select("b");
+				
+				Element first = null;
 				if (strong.size() != 0)
-					possible.add(strong.first());
-				if (bold.size() != 0)
-					possible.add(bold.first());
+					first = strong.first();
+				else if (bold.size() != 0)
+					first = bold.first();
+				else
+					continue;
+				
+				String text = first.text();
+				if(likelyCourseName(text)) {
+					potentialTitles.add(first);
+					potentialTitleToDescription.put(first, paragraph);
+				}
 			}
 
-			for (int j = 0; j < possible.size(); j++) {
-				Element ePossible = possible.get(j);
-				String text = ePossible.text();
-				if (likelyCourseName(text)) {
-					potentialTitles.add(text);
-				}
+			Iterator<Map.Entry<Element, Element>> itTitleDescription =
+					potentialTitleToDescription.entrySet().iterator();
+			while(itTitleDescription.hasNext()) {
+				Map.Entry<Element, Element> next = itTitleDescription.next();
+				System.out.println("Course: " + next.getKey().text());
+				System.out.println("Value: " + next.getValue().text());
 			}
 		}
 		
