@@ -1,4 +1,4 @@
-package g2;
+package g2.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,8 +10,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class MyFirstExtractor {
-	public MyFirstExtractor() {
+public class C1TitleExtractor {
+	public C1TitleExtractor() {
 
 	}
 
