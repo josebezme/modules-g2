@@ -50,8 +50,16 @@ public class RelativeUsages {
 	}
 
 	public static void main(String[] args) throws Exception {
+		if (args.length != 1) {
+			System.err.println("Usage: java RelativeUsages urlList.txt");
+			System.err.println("\t(one URL per line)");
+			System.exit(1);
+		}
+		
+		String fileName = args[0];
+		
 		urlsToTagUsages = new HashMap<String, TagUsage>();
-		File inputFile = new File("urls/urls-paragraphs.txt");
+		File inputFile = new File(fileName);
 		BufferedReader br = new BufferedReader(new FileReader(inputFile));
 
 		String url;
