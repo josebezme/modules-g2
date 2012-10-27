@@ -4,31 +4,80 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class C1TitleExtractor {
-	public C1TitleExtractor() {
+import com.google.common.base.Strings;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
+public class C1TitleExtractor {
+	private C1TitleExtractor() { // static methods.
 	}
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File("urls/urls-paragraphs.txt");
 		BufferedReader br = new BufferedReader(new FileReader(inputFile));
 
+		List<String> urls = new ArrayList<String>();
 		String url;
 		while ((url = br.readLine()) != null) {
-			process(url);
+			if(!Strings.isNullOrEmpty(url)) {
+				urls.add(url);
+			}
+		}
+		
+		br.close();
+		
+		Multimap<String, String> titles = extractTitles(urls.toArray(new String[0]));
+		
+		for(String key: titles.keySet()) {
+			System.out.println("host: " + key);
+			for(String course : titles.get(key)) {
+				System.out.println("\t" + course);
+			}
 		}
 	}
 
-	public static void process(String url) throws IOException {
+	public static Multimap<String, String> extractTitles(String[] urls) {
+		Multimap<String, String> titles = LinkedHashMultimap.create();
+		
+		String host;
+		Set<String> potentialTitles;
+		for(String url : urls) {
+			try {
+				host = Utils.getHost(url);
+				
+				potentialTitles = process(url);
+				
+				titles.putAll(host, potentialTitles);
+				
+			} catch (MalformedURLException e) {
+				System.out.println("Unable to turn into url: " + url);
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.out.println("Error reading from: " + url );
+				e.printStackTrace();
+			}
+		}
+		
+		return titles;
+	}
+
+	private static Set<String> process(String url) throws IOException {
 		Document doc = Jsoup.connect(url).get();
 		Elements paragraphs = doc.select("p");
 		System.out.println("===" + url + "===");
+		
+		Set<String> potentialTitles = new HashSet<String>();
 
 		for (int i = 0; i < paragraphs.size(); i++) {
 			Elements possible = new Elements();
@@ -45,10 +94,13 @@ public class C1TitleExtractor {
 			for (int j = 0; j < possible.size(); j++) {
 				Element ePossible = possible.get(j);
 				String text = ePossible.text();
-				if (likelyCourseName(text))
-					System.out.println(text);
+				if (likelyCourseName(text)) {
+					potentialTitles.add(text);
+				}
 			}
 		}
+		
+		return potentialTitles;
 	}
 
 	public static boolean likelyCourseName(final String text) {
