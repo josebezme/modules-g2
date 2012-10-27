@@ -1,7 +1,8 @@
 package g2.model;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.List;
 
 public class Digraph {
   

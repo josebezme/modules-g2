@@ -1,6 +1,6 @@
 package g2.model;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class DigraphTester {
   

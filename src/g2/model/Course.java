@@ -1,6 +1,7 @@
 package g2.model;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Course {
   
@@ -22,6 +23,10 @@ public class Course {
   /* Fill in prereqs and terms. 
    * Pass a list of courses seen at this college to help identify prereqs. */
   public void processHtml(List<Course> seenCourses) {
+    for (Course c : seenCourses) {
+      if (rawHtml.contains(c.id) || rawHtml.contains(c.name))
+        setPrereq(c);
+    }
   }
   
   public void setPrereq(Course c) {
