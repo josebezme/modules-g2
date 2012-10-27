@@ -1,13 +1,8 @@
 package g2.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
@@ -15,7 +10,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -24,20 +18,9 @@ public class C1TitleExtractor {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File inputFile = new File("urls/urls-paragraphs.txt");
-		BufferedReader br = new BufferedReader(new FileReader(inputFile));
-
-		List<String> urls = new ArrayList<String>();
-		String url;
-		while ((url = br.readLine()) != null) {
-			if(!Strings.isNullOrEmpty(url)) {
-				urls.add(url);
-			}
-		}
+		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
 		
-		br.close();
-		
-		Multimap<String, String> titles = extractTitles(urls.toArray(new String[0]));
+		Multimap<String, String> titles = extractTitles(urls);
 		
 		for(String key: titles.keySet()) {
 			System.out.println("host: " + key);
