@@ -21,7 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
-public class CourseIdParser {
+public class MathIdParser {
 	
 	private static final String PREFIXES[] = {
 		"m",
