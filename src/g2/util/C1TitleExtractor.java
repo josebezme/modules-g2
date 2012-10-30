@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,6 +18,8 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 public class C1TitleExtractor {
+	private static final Logger logger = Logger.getLogger(C1TitleExtractor.class);
+	
 	private C1TitleExtractor() { // static methods.
 	}
 
@@ -26,9 +29,9 @@ public class C1TitleExtractor {
 		Multimap<String, Element> titles = extractTitles(urls);
 		
 		for(String key: titles.keySet()) {
-			System.out.println("host: " + key);
+			logger.debug("host: " + key);
 			for(Element course : titles.get(key)) {
-				System.out.println("\t" + course.text());
+				logger.debug("\t" + course.text());
 			}
 		}
 	}
@@ -47,10 +50,10 @@ public class C1TitleExtractor {
 				titles.putAll(host, potentialTitles);
 				
 			} catch (MalformedURLException e) {
-				System.out.println("Unable to turn into url: " + url);
+				logger.debug("Unable to turn into url: " + url);
 				e.printStackTrace();
 			} catch (IOException e) {
-				System.out.println("Error reading from: " + url );
+				logger.debug("Error reading from: " + url );
 				e.printStackTrace();
 			}
 		}
@@ -61,7 +64,7 @@ public class C1TitleExtractor {
 	private static Set<Element> process(String url) throws IOException {
 		Document doc = Jsoup.connect(url).get();
 		Elements paragraphs = doc.select("p");
-		System.out.println("===" + url + "===");
+		logger.debug("===" + url + "===");
 		
 		Set<Element> potentialTitles = new HashSet<Element>();
 
@@ -93,8 +96,8 @@ public class C1TitleExtractor {
 					potentialTitleToDescription.entrySet().iterator();
 			while(itTitleDescription.hasNext()) {
 				Map.Entry<Element, Element> next = itTitleDescription.next();
-				System.out.println("Course: " + next.getKey().text());
-				System.out.println("Value: " + next.getValue().text());
+//				logger.debug("Course: " + next.getKey().text());
+//				logger.debug("Value: " + next.getValue().text());
 			}
 		}
 		
