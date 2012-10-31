@@ -1,5 +1,7 @@
-package g2.model;
+package g2;
 
+import g2.model.Course;
+import g2.model.Digraph;
 import g2.util.C1CourseExtractor;
 import g2.util.Utils;
 
