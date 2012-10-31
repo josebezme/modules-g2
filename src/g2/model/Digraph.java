@@ -16,9 +16,9 @@ public class Digraph {
       FileWriter w = new FileWriter(fileName);
       w.write("digraph {\n");
       for (Course to : courses) {
-        w.write("\"" + to.name + "\"\n");
+        w.write("\"" + to.courseId + "\"\n");
         for (Course from : to.prereqs())
-          w.write("\"" + to.name + "\"->\"" + from.name + "\"\n");
+          w.write("\"" + to.courseId + "\"->\"" + from.courseId + "\"\n");
       }
       w.write("}\n");
       w.close();

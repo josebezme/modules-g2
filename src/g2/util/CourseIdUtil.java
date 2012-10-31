@@ -46,7 +46,7 @@ public class CourseIdUtil {
 		"in"
 	};
 	
-	private static final String ID_SUF = "( )?([0-9]+)";
+	private static final String ID_SUF = "( )?([0-9]+[a-zA-Z]?)";
 
 	private static final Function<String, String> FORMAT_ONE_WORDS = new Function<String, String>() {
 		@Override
@@ -118,8 +118,6 @@ public class CourseIdUtil {
 	}
 	
 	public static void populateCourseIds(Multimap<String, Course> hosts) {
-		Map<Element, CourseId>  courseIds = new HashMap<Element, CourseId>();
-		
 		 for(String host : hosts.keySet()) {
 		// Get all possible Alpha-numeric sequences of 1 or 2 words.
 			logger.debug("host: " + host);
@@ -155,7 +153,7 @@ public class CourseIdUtil {
 					if(m.find()) {
 						String id = m.group();
 						logger.debug("Found id: " + id);
-						if(!courseIds.containsKey(c.titleElement)) {
+						if(c.courseId == null) {
 							c.courseId = new CourseId(wrap.word, m.group(2));
 						}
 					}

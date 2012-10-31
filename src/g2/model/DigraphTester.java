@@ -1,23 +1,25 @@
 package g2.model;
 
+import g2.util.C1CourseExtractor;
+import g2.util.Utils;
+
 import java.util.ArrayList;
 
+import com.google.common.collect.Multimap;
+
 public class DigraphTester {
-  
-  public static void main(String[] args) {
-    Course c1 = new Course("Math 101", "Intro to Math", "");
-    Course c2 = new Course("Math 200", "Linear Algebra", "");
-    Course c3 = new Course("Math 201", "Multivariable Calculus", "");
-    
-    c2.setPrereq(c1);
-    c3.setPrereq(c1);
-    c3.setPrereq(c2);
-    
-    ArrayList<Course> courses = new ArrayList<Course>();
-    courses.add(c1);
-    courses.add(c2);
-    courses.add(c3);
-    
-    Digraph.DigraphToFile("digr", courses);
-  }
+
+	public static void main(String[] args) {
+
+		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
+
+		System.out.println("Getting courses...");
+		Multimap<String, Course> host2courses = C1CourseExtractor.extractCourses(urls);
+		System.out.println("Got courses...");
+		ArrayList<Course> courses = new ArrayList<Course>(host2courses.get("www.uh.edu"));
+
+		Digraph.DigraphToFile("digr", courses);
+		
+		System.out.println("Done.");
+	}
 }
