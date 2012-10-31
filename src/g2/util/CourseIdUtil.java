@@ -1,5 +1,8 @@
 package g2.util;
 
+import g2.model.Course;
+import g2.model.Course.CourseId;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,8 +24,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
-public class CourseIdExtractor {
-	private static final Logger logger = Logger.getLogger(CourseIdExtractor.class);
+public class CourseIdUtil {
+	private static final Logger logger = Logger.getLogger(CourseIdUtil.class);
 
 	private static final String[] SPECIAL_CHARS = { 
 			";", 
@@ -43,7 +46,7 @@ public class CourseIdExtractor {
 		"in"
 	};
 	
-	private static final String ID_SUF = "( )?[0-9]+";
+	private static final String ID_SUF = "( )?([0-9]+)";
 
 	private static final Function<String, String> FORMAT_ONE_WORDS = new Function<String, String>() {
 		@Override
@@ -103,18 +106,25 @@ public class CourseIdExtractor {
 
 	public static void main(String[] args) {
 		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
-		Multimap<String, Element> titles = C1TitleExtractor.extractTitles(urls);
-		Map<Element, String> courseIds = extractCourseIds(titles);
+		Multimap<String, Course> courses = C1CourseExtractor.extractCourses(urls);
+		populateCourseIds(courses);
+		
+		for(String key: courses.keySet()) {
+			logger.debug("host: " + key);
+			for(Course course : courses.get(key)) {
+				logger.debug("\t" + course);
+			}
+		}
 	}
 	
-	public static Map<Element, String> extractCourseIds(Multimap<String, Element> titles) {
-		Map<Element, String>  courseIds = new HashMap<Element, String>();
+	public static void populateCourseIds(Multimap<String, Course> hosts) {
+		Map<Element, CourseId>  courseIds = new HashMap<Element, CourseId>();
 		
-		 for(String host : titles.keySet()) {
+		 for(String host : hosts.keySet()) {
 		// Get all possible Alpha-numeric sequences of 1 or 2 words.
 			logger.debug("host: " + host);
-			Collection<Element> titleElements = titles.get(host);
-			Sequence seq = splitSequences(titleElements);
+			Collection<Course> courses = hosts.get(host);
+			Sequence seq = splitSequences(courses);
 	
 			for (String word : seq.oneWord) {
 				int freq = 0;
@@ -139,14 +149,14 @@ public class CourseIdExtractor {
 					break;
 				}
 				
-				for(Element e: titleElements) {
-					m = p.matcher(e.text());
+				for(Course c: courses) {
+					m = p.matcher(c.titleElement.text());
 					
 					if(m.find()) {
 						String id = m.group();
 						logger.debug("Found id: " + id);
-						if(!courseIds.containsKey(e)) {
-							courseIds.put(e, id);
+						if(!courseIds.containsKey(c.titleElement)) {
+							c.courseId = new CourseId(wrap.word, m.group(2));
 						}
 					}
 				}
@@ -154,19 +164,17 @@ public class CourseIdExtractor {
 	
 			logger.debug(seq);
 		 }
-		 
-		 return courseIds;
 	}
 
-	private static Sequence splitSequences(Collection<Element> elements) {
+	private static Sequence splitSequences(Collection<Course> courses) {
 		Sequence seq = new Sequence();
 		
 		Pattern p = Pattern.compile("([a-zA-Z]+)([0-9]+)");
 		Matcher m;
 
 		Iterable<String> it;
-		for (Element e : elements) {
-			List<String> words = Arrays.asList(e.text().split("\\s"));
+		for (Course c : courses) {
+			List<String> words = Arrays.asList(c.titleElement.text().split("\\s"));
 			
 			it = Iterables.transform(words, FORMAT_ONE_WORDS);
 			it = Iterables.filter(it, REMOVE);
