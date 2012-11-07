@@ -8,11 +8,14 @@ import java.util.Set;
 import org.jsoup.nodes.Element;
 
 import com.google.common.base.Joiner;
+import com.google.gson.annotations.Expose;
 
 public class Course {
 
 	public static class CourseId {
+		@Expose
 		public String dept;
+		@Expose
 		public String id;
 		
 		public CourseId(String dept, String id) {
@@ -33,10 +36,19 @@ public class Course {
 			}
 			return false;
 		}
+		
+		@Override
+		public int hashCode() {
+			return toString().hashCode();
+		}
 	}
 	
+	@Expose 
 	public CourseId courseId;
+	
+	@Expose
 	public String name;
+	
 	public Element titleElement;
 	public Element htmlElement;
 
@@ -55,13 +67,29 @@ public class Course {
 		this.name = name;
 		terms = new ArrayList<String>();
 	}
+	
+	public Course(String dept, String id) {
+		this.courseId = new CourseId(dept, id);
+	}
 
-	public void setPrereq(Course c) {
-		prereqs.add(c);
+	public void setPrereq(Set<Course> prereqs) {
+		this.prereqs = prereqs;
 	}
 
 	public Set<Course> prereqs() {
 		return prereqs;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Course) {
+			Course other = (Course) obj;
+			if(courseId != null && other.courseId != null) {
+				return courseId.equals(other.courseId);
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -73,9 +101,20 @@ public class Course {
 		
 		return courseId + " - " + name + " Prereqs[" + Joiner.on(",").join(courses) + "]";
 	}
+	
+	public String toShortString() {
+		return courseId.toString();
+	}
 
 	public void addPrereq(Course prereq) {
 		prereqs.add(prereq);
 	}
-
+	
+	@Override
+	public int hashCode() {
+		return (courseId != null) ? courseId.hashCode() : 
+			(name != null) ? name.hashCode() :
+				1000;
+	}
+	
 }
