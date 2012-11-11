@@ -140,14 +140,14 @@ public class TermFilter {
 	};
 	
 	public static void main(String[] args) {
-//		String urls[] = {"http://www.uh.edu/academics/catalog/colleges/nsm/courses/math/"};
-//		Multimap<String, Course> hosts = C1CourseExtractor.extractCourses(urls);
-//		filterTerms(hosts);
+		String urls[] = {"http://www.uh.edu/academics/catalog/colleges/nsm/courses/math/"};
+		Multimap<String, Course> hosts = C1CourseExtractor.extractCourses(urls);
+		filterTerms(hosts);
 		
-		for(String term : AND_TEST_SET) {
-			List<String> terms = processAnd(term);
-			System.out.println(term + " -> " + terms);
-		}
+//		for(String term : AND_TEST_SET) {
+//			List<String> terms = processAnd(term);
+//			System.out.println(term + " -> " + terms);
+//		}
 	}
 	
 	public static void filterTerms(Multimap<String, Course> hosts2courses) {
@@ -190,7 +190,8 @@ public class TermFilter {
 						
 						// Is there still an and in there?
 						if(term.contains("and")) {
-							processAnd(term);
+							termList.addAll(processAnd(term));
+							continue;
 						}
 						
 						if(term.contains("with")) {
@@ -215,11 +216,10 @@ public class TermFilter {
 				termList.addAll(Arrays.asList(terms));
 				
 				for(String term : termList) {
-					if(term.contains("and")) {
-						System.out.println(term);
-					}
+					System.out.println(term);
 				}
 				
+				c.getTerms().addAll(termList);
 			}
 		}
 	}
@@ -271,6 +271,8 @@ public class TermFilter {
 									termList.add(term.substring(term.indexOf(" and ") + 5));
 								}
 							}
+						} else {
+							splitAndAddByFirstAnd(term, termList);
 						}
 					}
 				}
