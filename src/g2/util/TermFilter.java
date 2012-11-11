@@ -1,5 +1,6 @@
 package g2.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import g2.api.GoogleDictionary;
+import g2.api.GoogleDictionary.SpeechPart;
 import g2.model.Course;
 
 import com.google.common.base.Predicate;
@@ -21,7 +24,10 @@ public class TermFilter {
 		
 		@Override
 		public boolean apply(String sentence) {
-			if(sentence.contains("prereq") || sentence.contains("semester")) {
+			if(	sentence.contains("prereq") || 
+				sentence.contains("semester") ||
+				sentence.contains("credit") ||
+				sentence.contains("requirements")) {
 				return false;
 			}
 			
@@ -58,12 +64,90 @@ public class TermFilter {
 		}
 	};
 	
+	private static final String AND_TEST_SET[] = {
+		"existence and uniqueness for cauchy and dirichlet problems"
+		,"band-limited and time-limited signals"
+		,"filtering and its connection"
+		,"discrete and fast fourier transforms"
+		,"uniform continuity and uniform convergence"
+		,"transformations and their derivatives"
+		,"algebra and calculus of vectors"
+		,"green's and stokes' theorems"
+		,"existence and uniqueness for cauchy and dirichlet problems"
+		,"euclid to dedekind focusing on the development of the real number system and its relation to the euclidean line"
+		,"graphical and descriptive methods"
+		,"hypotheses and statistical inference"
+		,"calculus of transcendental functions: additional techniques and applications of integration"
+		,"uniqueness and stability of solutions"
+		,"logarithmic and exponential functions"
+		,"partial differential equations and boundary value problems"
+		,"first order ordinary differential equations and initial value problems"
+		,"eigenvectors and eigenvalues"
+		,"notable mathematicians and the importance of their discoveries"
+		,"testing and application to designs of experiments"
+		,"math 3399 and math 4399 must be satisfied in order for any to apply to a degree"
+		,"models of genetics and evolution"
+		,"pricing of european and american options"
+		,"graphical and descriptive methods in statistics"
+		,"random variables and distributions"
+		,"exploratory and diagnostic methods"
+		,"one-dimensional maps of the interval and the circle"
+		,"math 3399 and math 4399 must be satisfied in order for any to apply to a degree"
+		,"ideas and activities that reinforce interrelationships among topics in mathematics"
+		,"principles of logic and proof"
+		,"formal and informal geometry"
+		,"special devices and approximation methods"
+		,"similarity eigenvalues and eigenvectors"
+		,"math 1451 will include topics normally covered in math 1432 and 2433"
+		,"curve sketching and graphical analysis"
+		,"differentiation and integration of elementary functions"
+		,"applications in business and the natural and social sciences"
+		,"synthetic and algebraic geometry"
+		,"hermitian and positive definite matrices"
+		,"vector spaces and linear transformations"
+		,"eigenvalues and eigenvectors"
+		,"statistics for biological and biomedical data"
+		,"numerical integration and differentiation"
+		,"approximate solutions of ordinary and partial differential equations"
+		,"math 3396 and math 4396 must be satisfied in order for any to apply to a degree"
+		,"numerical integration and differentiation"
+		,"approximate solutions of ordinary and partial differential equations"
+		,"conjecture and proof"
+		,"math 1451 will include topics normally covered in math 1432 and 2433"
+		,"review of ruler and compass construction"
+		,"analytic and transformational geometry"
+		,"differences and rates of change"
+		,"discrete and continuous versions of poisson and markov processes"
+		,"branching and renewal processes"
+		,"introduction to stochastic calculus and diffusion"
+		,"continuity of solutions of single equations and systems of equations"
+		,"topics in number theory and abstract algebra"
+		,"testing and application to designs of experiments"
+		,"first-degree equations and inequalities in one variable"
+		,"systems of first-degree equations in two variables solved by graphical and algebraic means"
+		,"exponents and radicals"
+		,"math 3396 and math 4396 must be satisfied in order for any to apply to a degree"
+		,"analysis on written and oral communication"
+		,"the gauss-bonnet theorem and the euler-poincare index theorem"
+		,"random variables and distributions"
+		,"variances and covariances"
+		,"basic discrete and continuous distributions"
+		,"classical and abstract algebra"
+		,"bonds and bank certificates of deposit"
+		,"bond and annuity valuation"
+		,"the gauss-bonnet theorem and the euler-poincare index theorem"
+		,"topics in probability and statistics"
+	};
 	
 	public static void main(String[] args) {
-		String urls[] = {"http://www.uh.edu/academics/catalog/colleges/nsm/courses/math/"};
-		Multimap<String, Course> hosts = C1CourseExtractor.extractCourses(urls);
+//		String urls[] = {"http://www.uh.edu/academics/catalog/colleges/nsm/courses/math/"};
+//		Multimap<String, Course> hosts = C1CourseExtractor.extractCourses(urls);
+//		filterTerms(hosts);
 		
-		filterTerms(hosts);
+		for(String term : AND_TEST_SET) {
+			List<String> terms = processAnd(term);
+			System.out.println(term + " -> " + terms);
+		}
 	}
 	
 	public static void filterTerms(Multimap<String, Course> hosts2courses) {
@@ -72,7 +156,7 @@ public class TermFilter {
 //			for(int i = 0; i < 3; i++) {
 //				Course c = courses.get(i);
 			for(Course c : courses) {
-				logger.info("Getting terms for course: " + c);
+//				logger.info("Getting terms for course: " + c);
 				String desc = c.htmlElement.text().toLowerCase();
 				logger.debug(desc);
 				
@@ -88,19 +172,36 @@ public class TermFilter {
 				
 				List<String> termList = new LinkedList<String>();
 				for(String sentence : sentences) {
-					String terms[] = sentence.split("(,|;|\\sand\\s|\\sor\\s)");
+//					String terms[] = sentence.split("(,|;|\\sand\\s|\\sor\\s)");
+					String terms[] = sentence.split("(,|;|:)");
 					
 					for(String term : terms) {
+						term = term.trim();
+						
+						// If we left a leading and
+						// from spliting remove it and carry on.
+						if(term.indexOf("and") == 0) {
+							term = term.substring(3);
+							
+							// maybe a trailing and?  maybe....
+						} else if(term.indexOf("and") == term.length() - 3) {
+							term = term.substring(0, term.length() - 3);
+						}
+						
+						// Is there still an and in there?
+						if(term.contains("and")) {
+							processAnd(term);
+						}
 						
 						if(term.contains("with")) {
 							String firstTerm = term.substring(0, term.indexOf("with"));
 							term = term.substring(term.indexOf("with") + "with".length(), term.length());
 							
-							termList.add(firstTerm);
-							termList.add(term);
+							termList.add(firstTerm.trim());
+							termList.add(term.trim());
 						} else if (term.contains("from")) {
 							term = term.substring(term.indexOf("from") + "from".length(), term.length());
-							termList.add(term);
+							termList.add(term.trim());
 						} else {
 							termList.add(term.trim());
 						}
@@ -114,10 +215,72 @@ public class TermFilter {
 				termList.addAll(Arrays.asList(terms));
 				
 				for(String term : termList) {
-					logger.info(term);
+					if(term.contains("and")) {
+						System.out.println(term);
+					}
 				}
 				
 			}
 		}
+	}
+	
+	private static void splitAndAddByFirstAnd(String term, List<String> termList) {
+		String terms[] = term.split("\\sand\\s");
+		
+		int index = term.indexOf(" and ");
+		termList.add(term.substring(index + 5));
+		termList.add(term.substring(0, index));
+		
+	}
+	
+	public static List<String> processAnd(String term) {
+		List<String> termList = new ArrayList<String>(2);
+		
+		try {
+			String bySpace[] = term.split("\\s");
+			
+			for(int i = 0; i < bySpace.length; i++) {
+				if(bySpace[i].equalsIgnoreCase("and")) {
+					//Found and so check before and after word.
+					
+					String before = bySpace[i - 1];
+					String after = bySpace[i + 1];
+					
+					int hyphen;
+					if((hyphen = before.indexOf('-')) != -1) {
+						before = before.substring(hyphen + 1);
+					}
+					
+					if((hyphen = after.indexOf('-')) != -1) {
+						after = after.substring(hyphen + 1);
+					}
+					
+					if(
+						after.equals("the") || // topics are proper nouns 
+						(i + 2 >= bySpace.length && i - 1 <= 0) // not enough words
+						) {
+						splitAndAddByFirstAnd(term, termList);
+						
+					} else {
+						SpeechPart part = GoogleDictionary.getPartofSpeech(before);
+						if(part == SpeechPart.ADJECTIVE) {
+							for(int j = i + 2; j < bySpace.length; j++) {
+								part = GoogleDictionary.getPartofSpeech(bySpace[j]);
+								if(part == SpeechPart.NOUN || j == bySpace.length - 1) {
+									termList.add(term.substring(0, term.indexOf(" and ")) + " " + bySpace[j]);
+									termList.add(term.substring(term.indexOf(" and ") + 5));
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			// gotta catch'em all!
+		}
+		
+		
+		return termList;
 	}
 }
