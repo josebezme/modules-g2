@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element;
 import com.google.common.base.Joiner;
 import com.google.gson.annotations.Expose;
 
-public class Course {
+public class Course extends Hierarchical {
 
 	public static class CourseId {
 		@Expose
@@ -71,14 +71,6 @@ public class Course {
 	public Course(String dept, String id) {
 		this.courseId = new CourseId(dept, id);
 	}
-
-	public void setPrereq(Set<Course> prereqs) {
-		this.prereqs = prereqs;
-	}
-
-	public Set<Course> prereqs() {
-		return prereqs;
-	}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -105,10 +97,6 @@ public class Course {
 	public String toShortString() {
 		return courseId.toString();
 	}
-
-	public void addPrereq(Course prereq) {
-		prereqs.add(prereq);
-	}
 	
 	@Override
 	public int hashCode() {
@@ -125,4 +113,7 @@ public class Course {
 		this.terms = terms;
 	}
 	
+	public String toString() {
+		return name;
+	}
 }
