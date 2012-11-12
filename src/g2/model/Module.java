@@ -80,6 +80,13 @@ public class Module extends Hierarchical {
 			}
 		} while (foundMerge);
 		
+		ArrayList<Module> newModules = new ArrayList<Module>();
+		for (Module m : modules) {
+			if (m.numPrereqs() > 0)
+				newModules.add(m);
+		}
+		modules = newModules;
+		
 		ArrayList<Hierarchical> nodes = new ArrayList<Hierarchical>();
 		for (Module m : modules)
 			nodes.add(m);

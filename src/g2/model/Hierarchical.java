@@ -24,6 +24,10 @@ public abstract class Hierarchical {
 		return prereqs.contains(pre);
 	}
 	
+	public int numPrereqs() {
+		return prereqs.size();
+	}
+	
 	public abstract String toString();
 
 }
