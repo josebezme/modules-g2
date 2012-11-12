@@ -64,6 +64,16 @@ public class TermFilter {
 		}
 	};
 	
+	private static final String AND_OF_TEST_SET[] = {
+		"principles of logic and proof"
+		,"models of genetics and evolution"
+		,"pricing of european and american options"
+		,"one-dimensional maps of the interval and the circle"
+		,"approximate solutions of ordinary and partial differential equations"
+		,"continuity of solutions of single equations and systems of equations"
+		,"systems of first-degree equations in two variables solved by graphical and algebraic means"
+	};
+	
 	private static final String AND_TEST_SET[] = {
 		"existence and uniqueness for cauchy and dirichlet problems"
 		,"band-limited and time-limited signals"
@@ -77,7 +87,7 @@ public class TermFilter {
 		,"euclid to dedekind focusing on the development of the real number system and its relation to the euclidean line"
 		,"graphical and descriptive methods"
 		,"hypotheses and statistical inference"
-		,"calculus of transcendental functions: additional techniques and applications of integration"
+		,"additional techniques and applications of integration"
 		,"uniqueness and stability of solutions"
 		,"logarithmic and exponential functions"
 		,"partial differential equations and boundary value problems"
@@ -137,6 +147,16 @@ public class TermFilter {
 		,"bond and annuity valuation"
 		,"the gauss-bonnet theorem and the euler-poincare index theorem"
 		,"topics in probability and statistics"
+	};
+	
+	private static final String AND_TEST_MISSING[] = {
+		"green's and stokes' theorems"
+		,"uniqueness and stability of solutions"
+		,"math 3399 and math 4399 must be satisfied in order for any to apply to a degree"
+		,"math 1451 will include topics normally covered in math 1432 and 2433"
+		,"math 3396 and math 4396 must be satisfied in order for any to apply to a degree"
+		,"math 1451 will include topics normally covered in math 1432 and 2433"
+		,"math 3396 and math 4396 must be satisfied in order for any to apply to a degree"
 	};
 	
 	public static void main(String[] args) {
@@ -224,13 +244,12 @@ public class TermFilter {
 		}
 	}
 	
-	private static void splitAndAddByFirstAnd(String term, List<String> termList) {
+	private static void splitAndAddByFirstAnd(String term, List<String> termList, String ofForPrefix) {
 		String terms[] = term.split("\\sand\\s");
 		
 		int index = term.indexOf(" and ");
-		termList.add(term.substring(index + 5));
-		termList.add(term.substring(0, index));
-		
+		termList.add(ofForPrefix + term.substring(index + 5));
+		termList.add(ofForPrefix + term.substring(0, index));
 	}
 	
 	public static List<String> processAnd(String term) {
@@ -238,9 +257,21 @@ public class TermFilter {
 		
 		try {
 			String bySpace[] = term.split("\\s");
-			
+			String ofForPrefix = "";
 			for(int i = 0; i < bySpace.length; i++) {
-				if(bySpace[i].equalsIgnoreCase("and")) {
+				if(bySpace[i].equals("of")) {
+					ofForPrefix = ofForPrefix + term.substring(0, term.indexOf(" of ") + 4);
+					bySpace = Arrays.copyOfRange(bySpace, i + 1, bySpace.length);
+					i = 0;
+					term = term.substring(term.indexOf(" of ") + 4);
+					
+				} else if(bySpace[i].equals("for")) {
+					ofForPrefix = ofForPrefix + term.substring(0, term.indexOf(" for ")).trim();
+					bySpace = Arrays.copyOfRange(bySpace, i, bySpace.length);
+					i = 0;
+					term = term.substring(term.indexOf(" for ") + 4);
+					
+				} else if(bySpace[i].equalsIgnoreCase("and")) {
 					//Found and so check before and after word.
 					
 					String before = bySpace[i - 1];
@@ -255,11 +286,14 @@ public class TermFilter {
 						after = after.substring(hyphen + 1);
 					}
 					
-					if(
+					if(after.equalsIgnoreCase("its")) {
+						termList.add(term.substring(0, term.indexOf(" and ")).trim());
+						
+					} else if(
 						after.equals("the") || // topics are proper nouns 
 						(i + 2 >= bySpace.length && i - 1 <= 0) // not enough words
 						) {
-						splitAndAddByFirstAnd(term, termList);
+						splitAndAddByFirstAnd(term, termList, ofForPrefix);
 						
 					} else {
 						SpeechPart part = GoogleDictionary.getPartofSpeech(before);
@@ -267,19 +301,25 @@ public class TermFilter {
 							for(int j = i + 2; j < bySpace.length; j++) {
 								part = GoogleDictionary.getPartofSpeech(bySpace[j]);
 								if(part == SpeechPart.NOUN || j == bySpace.length - 1) {
-									termList.add(term.substring(0, term.indexOf(" and ")) + " " + bySpace[j]);
-									termList.add(term.substring(term.indexOf(" and ") + 5));
+									termList.add(ofForPrefix + term.substring(0, term.indexOf(" and ")) + " " + bySpace[j]);
+									termList.add(ofForPrefix + term.substring(term.indexOf(" and ") + 5));
 								}
 							}
+						} else if(before.contains("'") && after.contains("'")) {
+							termList.add(ofForPrefix + before + term.substring(term.indexOf(after) + after.length(), term.length()));
+							termList.add(ofForPrefix + term.substring(term.indexOf(" and ") + 5));
 						} else {
-							splitAndAddByFirstAnd(term, termList);
+							splitAndAddByFirstAnd(term, termList, ofForPrefix);
 						}
 					}
+					
+					break;
 				}
 			}
 			
 		} catch (Exception e) {
 			// gotta catch'em all!
+			logger.error("exception", e);
 		}
 		
 		

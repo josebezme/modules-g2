@@ -59,8 +59,15 @@ public class GoogleDictionary {
 	        	
 	        	JsonObject rootObject = root.getAsJsonObject();
 	        	
+	        	if(!rootObject.has("primaries")) {
+	        		return SpeechPart.UNKNOWN;
+	        	}
 	        	JsonArray primaries = rootObject.get("primaries").getAsJsonArray();
 	        	JsonObject primary = primaries.get(0).getAsJsonObject();
+	        	
+	        	if(!primary.has("terms")) {
+	        		return SpeechPart.UNKNOWN;
+	        	}
 	        	JsonArray terms = primary.get("terms").getAsJsonArray();
 	        	
 	        	for(JsonElement termE : terms) {
