@@ -94,10 +94,6 @@ public class Course extends Hierarchical {
 		return courseId + " - " + name + " Prereqs[" + Joiner.on(",").join(courses) + "]";
 	}
 	
-	public String toShortString() {
-		return courseId.toString();
-	}
-	
 	@Override
 	public int hashCode() {
 		return (courseId != null) ? courseId.hashCode() : 

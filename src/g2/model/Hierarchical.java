@@ -15,6 +15,10 @@ public abstract class Hierarchical {
 		if (prereqs.contains(prereq))
 			prereqs.remove(prereq);
 	}
+	
+	public void clearPrereqs() {
+		prereqs.clear();
+	}
 
 	public Set<Hierarchical> prereqs() {
 		return prereqs;

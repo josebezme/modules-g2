@@ -36,15 +36,15 @@ public class Module extends Hierarchical {
 	  m.removePrereq(this);
 	  
 	  Set<Hierarchical> newPrereqs = m.prereqs();
-	  for (Hierarchical pre : newPrereqs) {
+	  for (Hierarchical pre : newPrereqs)
 		  addPrereq(pre);
-		  m.removePrereq(pre);
-	  }
+	  m.clearPrereqs();
   }
   
   public static void main(String[] args) throws Exception {
 		List<Module> modules = new ArrayList<Module>();
-		modules.add(new Module("Continuity", "Continuity_(mathematics)"));
+		//modules.add(new Module("Continuity", "Continuity_(mathematics)"));
+		modules.add(new Module("Continuity", "Continuous_function"));
 		modules.add(new Module("Integral", "Integral_(mathematics)"));
 		modules.add(new Module("Implicit Function", "Implicit_function"));
 		modules.add(new Module("Lagrange error bound", "Lagrange_error_bound"));
@@ -67,6 +67,7 @@ public class Module extends Hierarchical {
 			for (Module a : modules) {
 				for (Module b : modules) {
 					if (a != b && a.hasPrereq(b) && b.hasPrereq(a)) {
+						System.out.println("MERGE: " + a.toString() + " AND " + b.toString());
 						foundMerge = true;
 						a.addModule(b);
 						for (Module c : modules) {
@@ -91,7 +92,7 @@ public class Module extends Hierarchical {
 		for (Module m : modules)
 			nodes.add(m);
 		
-		Digraph.DigraphToFile("moduleStructure", nodes);
+		Digraph.DigraphToFile("Modules", nodes);
   }	
   
 }
