@@ -104,6 +104,6 @@ public class Main {
 		
 		logger.info("Building hierarchy for " + topics.size() +  " topics ...");
 		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]), 0.0, pruning);
-		h.writeDotFile("kahuna");
+		h.writeDotFile("graph");
 	}
 }
