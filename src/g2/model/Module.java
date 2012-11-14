@@ -13,6 +13,7 @@ public class Module extends Hierarchical {
   public List<String> titles;
   public List<String> synonyms;
   private WikiPage wikiPage;
+  private SubTopic origTopic;
   
   private List<SubTopic> subtopics;
   
@@ -23,6 +24,17 @@ public class Module extends Hierarchical {
 	  synonyms = wikiPage.redirects();
 	  subtopics = new ArrayList<SubTopic>();
 	  subtopics.add(t);
+	  origTopic = t;
+  }
+  
+  public Module(Module m) {
+	  wikiPage = m.wikiPage;
+	  synonyms = m.synonyms;
+	  titles = new ArrayList<String>();
+	  titles.add(m.origTopic.topic.trim());
+	  subtopics = new ArrayList<SubTopic>();
+	  subtopics.add(m.origTopic);
+	  origTopic = m.origTopic;
   }
   
   public Module(Integer i) {
@@ -54,6 +66,14 @@ public class Module extends Hierarchical {
 		}
 		return courses;
 	}
+	
+	@Override
+		public boolean equals(Object obj) {
+			if(obj instanceof Module) {
+				return origTopic.equals(((Module) obj).origTopic);
+			}
+			return false;
+		}
 	
 	public boolean hasCourseIntersection(Module other) {
 		List<Course> a = getCourses();

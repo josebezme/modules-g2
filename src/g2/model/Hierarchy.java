@@ -14,7 +14,7 @@ public class Hierarchy {
 	private boolean doPruning;
 	
 	public Hierarchy(ArrayList<Module> testMods, boolean doPruning) {
-		modules = testMods;
+		setModules(testMods);
 		mergeCycles();
 		if (doPruning)
 			prune();
@@ -23,25 +23,25 @@ public class Hierarchy {
 	public Hierarchy(SubTopic[] topics, double threshold, boolean doPruning) {
 		this.doPruning = doPruning;
 		
-		modules = new ArrayList<Module>();
+		setModules(new ArrayList<Module>());
 			
 		logger.info("Creating modules...");
 		// TODO: Check redirects so that we're not creating redundant modules
 		for (SubTopic t : topics) {
 			logger.info("Creating module for topic: " + t);
-			modules.add(new Module(t));
+			getModules().add(new Module(t));
 		}
 			
 		logger.info("Checking for module dependencies...");
-		for (Module a : modules) {
-			for (Module b : modules) {
+		for (Module a : getModules()) {
+			for (Module b : getModules()) {
 				if (a != b && a.hasCourseIntersection(b))
 					a.checkWikiForDependencyOn(b, threshold);
 			}
 		}
 		
 		logger.info("Merging cycles...");
-		mergeCycles();
+//		mergeCycles();
 		
 		logger.info("Pruning redundant edges...");
 		if (doPruning)
@@ -53,13 +53,13 @@ public class Hierarchy {
 		boolean foundCycle;
 		do {
 			foundCycle = false;
-			for (Module a : modules) {
+			for (Module a : getModules()) {
 				Module b = (Module) a.reachableFrom(a);
 				while (b != null) {
 					foundCycle = true;
 					a.addModule(b);
 					
-					for (Module c : modules) {
+					for (Module c : getModules()) {
 						if (c.hasPrereq(b)) {
 							c.removePrereq(b);
 							if (!c.hasPrereq(a))
@@ -73,16 +73,16 @@ public class Hierarchy {
 		} while (foundCycle);
 		
 		ArrayList<Module> newModules = new ArrayList<Module>();
-		for (Module m : modules) {
+		for (Module m : getModules()) {
 			if (m.numPrereqs() > 0 || numPostreqs(m) > 0)
 				newModules.add(m);
 		}
-		modules = newModules;
+		setModules(newModules);
 	}
 	
 	private int numPostreqs(Module pre) {
 		int count = 0;
-		for (Module post : modules) {
+		for (Module post : getModules()) {
 			if (post.hasPrereq(pre))
 				count++;
 		}
@@ -90,8 +90,8 @@ public class Hierarchy {
 	}
 	
 	private void prune() {
-		for (Module end : modules) {
-			for (Module start : modules) {
+		for (Module end : getModules()) {
+			for (Module start : getModules()) {
 				if (end != start && end.hasPrereq(start)) {
 					end.removePrereq(start);
 					if (end.reachableFrom(start) == null)
@@ -103,7 +103,7 @@ public class Hierarchy {
 	
 	public void writeDotFile(String filePrefix) {
 		ArrayList<Hierarchical> nodes = new ArrayList<Hierarchical>();
-		for (Module m : modules)
+		for (Module m : getModules())
 			nodes.add(m);
 		
 		Digraph.DigraphToFile(filePrefix, nodes);
@@ -141,6 +141,14 @@ public class Hierarchy {
 		
 		Hierarchy h2 = new Hierarchy(testMods, true);
 		h2.writeDotFile("Test5");*/
+	}
+
+	public List<Module> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
 	}
 
 }
