@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import g2.model.Course;
+import g2.model.Hierarchical;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -80,7 +81,8 @@ public class Serializer {
 				
 				Course c2 = courseList.get(courseList.indexOf(c));
 				
-				for(Course prereq : c.prereqs()) {
+				for(Hierarchical pre : c.prereqs()) {
+					Course prereq = (Course) pre;
 					if(!c2.prereqs().contains(prereq)) {
 						logger.error("Failed to find prereq: " + prereq.toShortString() + 
 								" in c: " + c.toShortString());
@@ -105,7 +107,6 @@ public class Serializer {
 			
 			for(JsonElement e2 : hostObject.get("courses").getAsJsonArray()) {
 				Course c = gson.fromJson(e2, Course.class);
-				c.setPrereq(new HashSet<Course>());
 				hosts.put(host, c);
 				
 				prereqMap.put(c, e2.getAsJsonObject().get("pre-reqs").getAsJsonArray());
@@ -145,7 +146,7 @@ public class Serializer {
 				courseJson = gson.toJsonTree(c).getAsJsonObject();
 				
 				prereqArray = new JsonArray();
-				for(Course prereq : c.prereqs()) {
+				for(Hierarchical prereq : c.prereqs()) {
 					prereqArray.add(gson.toJsonTree(prereq));
 				}
 				courseJson.add("pre-reqs", prereqArray);

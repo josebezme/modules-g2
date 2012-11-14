@@ -10,10 +10,15 @@ public class Module extends Hierarchical {
   public List<String> titles;
   private WikiPage wikiPage;
   
-  public Module(String title, String urlTitle) throws Exception {
-	  titles = new ArrayList<String>();
-	  titles.add(title);
+  public Module(String urlTitle) {
 	  wikiPage = new WikiPage(urlTitle);
+	  titles = new ArrayList<String>();
+	  titles.add(wikiPage.title);
+  }
+  
+  public Module(Integer i) {
+	  titles = new ArrayList<String>();
+	  titles.add(i.toString());
   }
   
   public void checkWikiForDependencyOn(Module that) {
@@ -41,10 +46,10 @@ public class Module extends Hierarchical {
 	  m.clearPrereqs();
   }
   
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
 		List<Module> modules = new ArrayList<Module>();
 		//modules.add(new Module("Continuity", "Continuity_(mathematics)"));
-		modules.add(new Module("Continuity", "Continuous_function"));
+		/*modules.add(new Module("Continuity", "Continuous_function"));
 		modules.add(new Module("Integral", "Integral_(mathematics)"));
 		modules.add(new Module("Implicit Function", "Implicit_function"));
 		modules.add(new Module("Lagrange error bound", "Lagrange_error_bound"));
@@ -52,7 +57,17 @@ public class Module extends Hierarchical {
 		modules.add(new Module("Euclidean space", "Euclidian_space"));
 		modules.add(new Module("Transformation", "Transformation_(mathematics)"));
 		modules.add(new Module("Uniform continuity", "Uniform_continuity"));
-		modules.add(new Module("Uniformly convergent", "Uniformly_convergent"));	
+		modules.add(new Module("Uniformly convergent", "Uniformly_convergent"));*/	
+		
+		modules.add(new Module("Continuous_function"));
+		modules.add(new Module("Integral_(mathematics)"));
+		modules.add(new Module("Implicit_function"));
+		modules.add(new Module("Lagrange_error_bound"));
+		modules.add(new Module("Derivative_(mathematics)"));
+		modules.add(new Module("Euclidian_space"));
+		modules.add(new Module("Transformation_(mathematics)"));
+		modules.add(new Module("Uniform_continuity"));
+		modules.add(new Module("Uniformly_convergent"));	
 		
 		for (Module a : modules) {
 			for (Module b : modules) {

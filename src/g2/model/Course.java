@@ -109,7 +109,7 @@ public class Course extends Hierarchical {
 		this.terms = terms;
 	}
 	
-	public String toString() {
-		return name;
+	public String toShortString() {
+		return toString();
 	}
 }
