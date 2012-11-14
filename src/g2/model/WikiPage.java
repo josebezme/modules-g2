@@ -30,6 +30,7 @@ public class WikiPage {
 		}
 		catch (Exception e) {
 			System.err.println(e.toString());
+			e.printStackTrace();
 		}
 		
 		//title = extractTitle(doc.select("title").text());
@@ -82,7 +83,7 @@ public class WikiPage {
 		catch (Exception e) {
 			System.err.println(e.toString());
 		}
-		Element linkSection = doc.select("ul").get(0);
+//		Element linkSection = doc.select("ul").get(0);
 		return null;
 	}
 	

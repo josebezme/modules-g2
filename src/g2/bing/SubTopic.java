@@ -12,4 +12,17 @@ public class SubTopic {
 	public String toString() {
 		return topic + "\t" + url;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof SubTopic) {
+			return url.equals(((SubTopic) obj).url);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return url.hashCode();
+	}
 }

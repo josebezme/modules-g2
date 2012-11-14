@@ -3,9 +3,13 @@ package g2.model;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import g2.bing.SubTopic;
 
 public class Hierarchy {
+	private static final Logger logger = Logger.getLogger(Hierarchy.class);
+	
 	private List<Module> modules;
 	private boolean doPruning;
 	
@@ -22,8 +26,10 @@ public class Hierarchy {
 		modules = new ArrayList<Module>();
 			
 		// TODO: Check redirects so that we're not creating redundant modules
-		for (SubTopic t : topics)
+		for (SubTopic t : topics) {
+			logger.info("Creating module for topic: " + t.topic);
 			modules.add(new Module(t.topic, t.url));
+		}
 			
 		for (Module a : modules) {
 			for (Module b : modules) {
