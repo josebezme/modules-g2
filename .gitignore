@@ -1,4 +1,5 @@
 *.class
+*.json
 bin/
 json/
 .DS_Store

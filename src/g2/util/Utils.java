@@ -44,7 +44,7 @@ public class Utils {
 	public static SubTopic toSubTopic(String pageName, String url) {
 		pageName = URLDecoder.decode(pageName);
 		url = URLDecoder.decode(url);
-		return new SubTopic(pageName, url);
+		return SubTopic.getSubtopic(pageName, url);
 	}
 
 }
