@@ -48,8 +48,10 @@ public class Module extends Hierarchical {
 	  m.removePrereq(this);
 	  
 	  Set<Hierarchical> newPrereqs = m.prereqs();
-	  for (Hierarchical pre : newPrereqs)
-		  addPrereq(pre);
+	  for (Hierarchical pre : newPrereqs) {
+		  if (!hasPrereq(pre))
+			  addPrereq(pre);
+	  }
 	  m.clearPrereqs();
   }
   

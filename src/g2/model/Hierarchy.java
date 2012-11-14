@@ -52,7 +52,8 @@ public class Hierarchy {
 					for (Module c : modules) {
 						if (c.hasPrereq(b)) {
 							c.removePrereq(b);
-							c.addPrereq(a);
+							if (!c.hasPrereq(a))
+								c.addPrereq(a);
 						}
 					}
 					
