@@ -1,0 +1,8 @@
+digraph {
+"Intro to Math"
+"Linear Algebra"
+"Linear Algebra"->"Intro to Math"
+"Multivariable Calculus"
+"Multivariable Calculus"->"Intro to Math"
+"Multivariable Calculus"->"Linear Algebra"
+}

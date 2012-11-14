@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element;
 import com.google.common.base.Joiner;
 import com.google.gson.annotations.Expose;
 
-public class Course {
+public class Course extends Hierarchical {
 
 	public static class CourseId {
 		@Expose
@@ -52,7 +52,7 @@ public class Course {
 	public Element titleElement;
 	public Element htmlElement;
 
-	private List<String> terms;
+	private List<String> terms = new ArrayList<String>();
 	private Set<Course> prereqs = new HashSet<Course>();
 	
 	public Course(String name, Element e, Element titleElement) {
@@ -65,19 +65,11 @@ public class Course {
 	public Course(String dept, String id, String name) {
 		this.courseId = new CourseId(dept, id);
 		this.name = name;
-		terms = new ArrayList<String>();
+		setTerms(new ArrayList<String>());
 	}
 	
 	public Course(String dept, String id) {
 		this.courseId = new CourseId(dept, id);
-	}
-
-	public void setPrereq(Set<Course> prereqs) {
-		this.prereqs = prereqs;
-	}
-
-	public Set<Course> prereqs() {
-		return prereqs;
 	}
 	
 	@Override
@@ -102,19 +94,22 @@ public class Course {
 		return courseId + " - " + name + " Prereqs[" + Joiner.on(",").join(courses) + "]";
 	}
 	
-	public String toShortString() {
-		return courseId.toString();
-	}
-
-	public void addPrereq(Course prereq) {
-		prereqs.add(prereq);
-	}
-	
 	@Override
 	public int hashCode() {
 		return (courseId != null) ? courseId.hashCode() : 
 			(name != null) ? name.hashCode() :
 				1000;
 	}
+
+	public List<String> getTerms() {
+		return terms;
+	}
+
+	public void setTerms(List<String> terms) {
+		this.terms = terms;
+	}
 	
+	public String toShortString() {
+		return toString();
+	}
 }

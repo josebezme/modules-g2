@@ -20,7 +20,7 @@ public class DigraphTester {
 		System.out.println("Got courses...");
 		ArrayList<Course> courses = new ArrayList<Course>(host2courses.get("www.uh.edu"));
 
-		Digraph.DigraphToFile("digr", courses);
+		//Digraph.DigraphToFile("digr", courses);
 		
 		System.out.println("Done.");
 	}
