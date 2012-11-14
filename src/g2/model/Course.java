@@ -111,4 +111,10 @@ public class Course extends Hierarchical {
 	public String toShortString() {
 		return toString();
 	}
+
+	@Override
+	public int linkScore(Hierarchical that) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

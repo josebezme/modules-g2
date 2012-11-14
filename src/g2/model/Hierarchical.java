@@ -2,6 +2,7 @@ package g2.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -62,29 +63,50 @@ public abstract class Hierarchical {
 		return null;
 	}
 	
-	/*public void removeCycle() {
-		HashSet<Hierarchical[]> visited = new HashSet<Hierarchical[]>();
+	public void removeCycle() {
+		HashSet<Hierarchical> visited = new HashSet<Hierarchical>();
+		HashMap<Hierarchical, Hierarchical> path = new HashMap<Hierarchical, Hierarchical>();
 		ArrayList<Hierarchical[]> toVisit = new ArrayList<Hierarchical[]>();
 		
 		for (Hierarchical h : prereqs) {
 			toVisit.add(new Hierarchical[] {h, this} );
 		}
-		Hierarchical next 
+		Hierarchical[] next = toVisit.remove(0);
 		
-		while (toVisit.size() > 0) {
-			Hierarchical next = toVisit.remove(0);
-			visited.add(next);
+		while (next[0] != this) {
+			visited.add(next[0]);
+			path.put(next[0], next[1]);
 			
-			for (Hierarchical h : next[0].prereqs()) {
-				if (h == start)
-					return next;
-				if (!visited.contains(h) && !toVisit.contains(h))
-					toVisit.add(h);
+			for (Hierarchical h : next[0].prereqs) {
+				if (!visited.contains(h))
+					toVisit.add(new Hierarchical[] {h, next[0]});
+			}
+			
+			next = toVisit.remove(0);
+		}
+		
+		ArrayList<Hierarchical> cycle = new ArrayList<Hierarchical>();
+		cycle.add(next[0]);
+		Hierarchical prev = next[1];
+		while (prev != this) {
+			cycle.add(prev);
+			prev = path.get(prev);
+		}
+		cycle.add(prev);
+		
+		int min = -1;
+		int argmin = -1;
+		for (int i = 0; i < cycle.size()-1; i++) {
+			int temp = cycle.get(i+1).linkScore(cycle.get(i));
+			if (temp > min) {
+				min = temp;
+				argmin = i+1;
 			}
 		}
-		return null;
-		return;
-	}*/
+		cycle.get(argmin).removePrereq(cycle.get(argmin-1));
+	}
+	
+	public abstract int linkScore(Hierarchical that);
 	
 	public abstract String toString();
 	

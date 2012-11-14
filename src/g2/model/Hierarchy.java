@@ -30,7 +30,7 @@ public class Hierarchy {
 		for (SubTopic t : topics) {
 			logger.info("Creating module for topic: " + t);
 			Module m = new Module(t);
-			if (m.titles != null)
+			if (m.titles != null && !m.titles.contains("Mathematics") && !m.synonyms.contains("Mathematics"))
 				modules.add(m);
 		}
 			
@@ -44,7 +44,9 @@ public class Hierarchy {
 		
 		logger.info("Merging cycles...");
 		//mergeCycles();
-		mergeCycles(5);
+		mergeCycles(2);
+		//mergePairs();
+		removeCycles();
 		//mergeCycles();
 		
 		logger.info("Pruning redundant edges...");
@@ -85,6 +87,38 @@ public class Hierarchy {
 		modules = newModules;
 	}
 	
+	public void mergePairs() {
+
+		boolean foundCycle;
+		do {
+			foundCycle = false;
+			for (Module a : modules) {
+				Module b = (Module) a.reachableFrom(a);
+				while (a.hasPrereq(b)) {
+					foundCycle = true;
+					a.addModule(b);
+					
+					for (Module c : modules) {
+						if (c.hasPrereq(b)) {
+							c.removePrereq(b);
+							if (!c.hasPrereq(a))
+								c.addPrereq(a);
+						}
+					}
+					
+					b = (Module) a.reachableFrom(a);
+				}
+			}
+		} while (foundCycle);
+		
+		ArrayList<Module> newModules = new ArrayList<Module>();
+		for (Module m : modules) {
+			if (m.numPrereqs() > 0 || numPostreqs(m) > 0)
+				newModules.add(m);
+		}
+		setModules(newModules);
+	}
+	
 	public void removeCycles() {
 
 		boolean foundCycle;
@@ -94,7 +128,7 @@ public class Hierarchy {
 				Module b = (Module) a.reachableFrom(a);
 				while (b != null) {
 					foundCycle = true;
-					//a.removeCycle();
+					a.removeCycle();
 					
 					b = (Module) a.reachableFrom(a);
 				}
@@ -204,6 +238,13 @@ public class Hierarchy {
 		h2.writeDotFile("Test5");*/
 	}
 
+	private boolean containsSubstring(List<String> synonyms, String match) {
+		for (String s : synonyms) {
+			if (s.toLowerCase().contains(match))
+				return true;
+		}
+		return false;
+	}
 	public void setModules(List<Module> modules) {
 		this.modules = modules;
 	}
