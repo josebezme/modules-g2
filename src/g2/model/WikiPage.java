@@ -77,14 +77,24 @@ public class WikiPage {
 	
 	public List<String> redirects() {
 		Document doc = null;
+		ArrayList<String> redirects = new ArrayList<String>();
 		try {
 			doc = Jsoup.connect(redirectUrlPrefix + urlTitle).get();
 		}
 		catch (Exception e) {
 			System.err.println(e.toString());
+			return redirects;
 		}
-//		Element linkSection = doc.select("ul").get(0);
-		return null;
+		Element linkSection = doc.select("ul").get(0);
+		Elements links = linkSection.select("a");
+		//System.out.println("---" + urlTitle + "---");
+		for (Element e : links) {
+			//if (e.text())
+			//System.out.println(e.text());
+			redirects.add(e.text());
+		}
+		//System.out.println();
+		return redirects;
 	}
 	
 	public static void main(String[] args) {
