@@ -20,6 +20,7 @@ public class Module extends Hierarchical {
   public int size;
   
   public Module(SubTopic t) {
+	  origTopic = t;
 	  wikiPage = new WikiPage(t.url);
 	  if (wikiPage.timedOut)
 		  return;
@@ -122,7 +123,7 @@ public class Module extends Hierarchical {
 	  }
 	  m.clearPrereqs();
 	  
-	  size++;
+	  size += m.size;
   }
   
   public static void main(String[] args) {
