@@ -62,6 +62,26 @@ public abstract class Hierarchical {
 		return null;
 	}
 	
+	/*public void removeCycle() {
+		HashSet<Hierarchical[]> visited = new HashSet<Hierarchical[]>();
+		ArrayList<Hierarchical> toVisit = new ArrayList<Hierarchical>();
+		
+		toVisit.add(this);
+		while (toVisit.size() > 0) {
+			Hierarchical next = toVisit.remove(0);
+			visited.add(new Hierarchical[] {next);
+			
+			for (Hierarchical h : next.prereqs()) {
+				if (h == start)
+					return next;
+				if (!visited.contains(h) && !toVisit.contains(h))
+					toVisit.add(h);
+			}
+		}
+		return null;
+		return;
+	}*/
+	
 	public abstract String toString();
 	
 	/**

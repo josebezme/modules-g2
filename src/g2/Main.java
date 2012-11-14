@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,15 +14,12 @@ import g2.bing.Bing;
 import g2.bing.SubTopic;
 import g2.model.Course;
 import g2.model.Hierarchy;
-import g2.model.Module;
 import g2.testing.hierarchy.TestPrerequisiteDepth;
 import g2.util.C1CourseExtractor;
-import g2.util.DirectedGraph;
 import g2.util.TermFilter;
 import g2.util.Utils;
 
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Ordering;
 
 /**
  * The big kahuna
@@ -78,9 +74,8 @@ public class Main {
 				Collection<Course> courses = host2courses.get(host);
 				Multimap<Course, SubTopic> newTopics = bing.getTopicsFromCourses(courses, area);
 				
-				
-				Set<SubTopic> uniqueTopics = new HashSet<SubTopic>(newTopics.values());
-				for(SubTopic topic : uniqueTopics) {
+				for(SubTopic topic : newTopics.values()) {
+					
 					Integer occurence = null;
 					if(urls.length > 1) {
 						if((occurence = subtopicOccurence.get(topic)) == null) {
@@ -98,10 +93,6 @@ public class Main {
 				}
 			}
 			
-			for(SubTopic topic : subtopicOccurence.keySet()) {
-				logger.info(subtopicOccurence.get(topic) + " : " + topic);
-			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -112,12 +103,6 @@ public class Main {
 		
 		logger.info("Building hierarchy for " + topics.size() +  " topics ...");
 		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]), 0.0, pruning);
-		h.writeDotFile("kahuna-classic");
-		
-		List<Module> directedModules = DirectedGraph.turnToDirected(h.getModules());
-		h.setModules(directedModules);		
-		h.writeDotFile("kahuna-directed");
+		h.writeDotFile("kahuna");
 	}
-	
-	
 }
