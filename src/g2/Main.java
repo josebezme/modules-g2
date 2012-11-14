@@ -14,6 +14,7 @@ import g2.bing.Bing;
 import g2.bing.SubTopic;
 import g2.model.Course;
 import g2.model.Hierarchy;
+import g2.testing.hierarchy.TestPrerequisiteDepth;
 import g2.util.C1CourseExtractor;
 import g2.util.TermFilter;
 import g2.util.Utils;
@@ -42,6 +43,16 @@ public class Main {
 		// Filter terms from courses
 		logger.info("Filtering terms from descriptions...");
 		TermFilter.filterTerms(host2courses);
+		
+		
+		/* Daniel's testing labelling here */
+		Collection<Course> coursesCollection = host2courses.values();
+		TestPrerequisiteDepth.label(coursesCollection);
+		System.exit(0);
+		/* End labelling testing */
+		
+		
+		
 		
 		// Estimate topics based on terms
 		Set<SubTopic> topics = new HashSet<SubTopic>();
