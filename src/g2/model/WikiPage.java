@@ -1,6 +1,7 @@
 package g2.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,13 +11,16 @@ import org.jsoup.select.Elements;
 public class WikiPage {
 	private static final String wikiUrlPrefix = "http://en.wikipedia.org/wiki/";
 	private ArrayList<String> outLinks;
+	private String urlTitle;
 	public String title;
 	private String fullText;
 	private String linkText;
 	
 	public WikiPage(String urlTitle) {
-		fullText = "";
-		linkText = "";
+		this.urlTitle = urlTitle;
+		
+		fullText = " ";
+		linkText = " ";
 		
 		Document doc = null;
 		try {
@@ -26,7 +30,7 @@ public class WikiPage {
 			System.err.println(e.toString());
 		}
 		
-		title = extractTitle(doc.select("title").text());
+		//title = extractTitle(doc.select("title").text());
 		Elements paragraphs = doc.select("p");
 		for (Element p : paragraphs) 
 			fullText = fullText.concat(p.text());
@@ -53,6 +57,23 @@ public class WikiPage {
 				return true;
 		}
 		return false;
+	}
+	
+	public int linkScore(Module that) {
+		String lowerFullText = fullText.toLowerCase() + " ";
+		String lowerLinkText = linkText.toLowerCase() + " ";
+		
+		int count = 0;
+		for (String title : that.titles) {
+			count += lowerFullText.split(title.toLowerCase()).length-1;
+			count += lowerLinkText.split(title.toLowerCase()).length-1;
+		}
+		//System.out.println(count);
+		return count;
+	}
+	
+	public List<String> redirects() {
+		return null;
 	}
 	
 	public static void main(String[] args) {
