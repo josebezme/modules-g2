@@ -211,7 +211,7 @@ public class TermFilter {
 							term = term.substring(3);
 							
 							// maybe a trailing and?  maybe....
-						} else if(term.indexOf("and") == term.length() - 3) {
+						} else if(term.indexOf("and") == Math.max(term.length() - 3, 0)) {
 							term = term.substring(0, term.length() - 3);
 						}
 						
