@@ -2,7 +2,10 @@ package g2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -55,8 +58,30 @@ public class Main {
 		logger.info("Retreiving topics from courses for ...");
 		try {
 			Bing bing = new Bing(new File("output.qc"));
-			Multimap<Course, SubTopic> newTopics = bing.getTopicsFromCourses(host2courses.values(), area);
-			topics.addAll(newTopics.values());
+			Map<SubTopic, Integer> subtopicOccurence = new HashMap<SubTopic, Integer>();
+			for(String host : host2courses.keySet()) {
+				Collection<Course> courses = host2courses.get(host);
+				Multimap<Course, SubTopic> newTopics = bing.getTopicsFromCourses(courses, area);
+				
+				for(SubTopic topic : newTopics.values()) {
+					
+					Integer occurence = null;
+					if(urls.length > 1) {
+						if((occurence = subtopicOccurence.get(topic)) == null) {
+							subtopicOccurence.put(topic, 1);
+						} else {
+							subtopicOccurence.put(topic, ++occurence);
+							
+							if(occurence > 1) {
+								topics.add(topic);
+							}
+						}
+					} else {
+						topics.add(topic);
+					}
+				}
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -64,6 +89,8 @@ public class Main {
 		}
 		
 		// Create modules based on topics
+		
+		logger.info("Building hierarchy for " + topics.size() +  " topics ...");
 		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]),0.0, pruning);
 		h.writeDotFile("kahuna");
 	}

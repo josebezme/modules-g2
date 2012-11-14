@@ -30,6 +30,7 @@ public class WikiPage {
 		}
 		catch (Exception e) {
 			System.err.println(e.toString());
+			e.printStackTrace();
 		}
 		
 		//title = extractTitle(doc.select("title").text());
