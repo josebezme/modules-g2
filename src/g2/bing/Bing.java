@@ -4,6 +4,7 @@ import g2.bing.json.Result;
 import g2.util.cleaners.WikipediaURLToName;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
@@ -22,6 +25,18 @@ import com.google.gson.Gson;
  */
 
 public class Bing {
+	private final QueryCacheWrapper qcr;
+	
+	/* Doesn't cache queries :'( */
+	private Bing() {
+		qcr = null;
+	}
+	
+	/* Caches queries. */
+	public Bing(File queryCacheFile) throws IOException, ClassNotFoundException {
+		qcr = new QueryCacheWrapper(queryCacheFile);
+	}
+	
 	/**
 	 * Given an area of study and keywords, attempts to identify a plausible subtopic
 	 * for the keywords in the area.
@@ -36,11 +51,10 @@ public class Bing {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String getTopicFromTermArea(String area, String terms) throws IOException {
+	public String getTopicFromTermArea(String area, String terms) throws IOException {
 		final String query = QueryGenerator.generateQueryForSubjectArea(area, terms);
 
-		final String json = query(query);
-		QueryOutput queryOutput = new Gson().fromJson(json, QueryOutput.class);
+		final QueryOutput queryOutput = query(query);
 		
 		List<Result> results = queryOutput.getD().getResults();
 		for(Result result : results) {
@@ -65,7 +79,15 @@ public class Bing {
 	 * @return
 	 * @throws IOException
 	 */
-	private static String query(final String query) throws IOException {
+	private QueryOutput query(final String query) throws IOException {
+		if(qcr != null) {
+			QueryOutput cacheOutput = qcr.find(query);
+			if (cacheOutput != null) {
+				System.out.println("CACHE HIT!"  + query);
+				return cacheOutput;
+			}
+		}
+		
 		final String encodedQuery = URLEncoder.encode(query);
 		
 		/* FYI: We can retrieve these in Atom as well [format=Atom], but used Json
@@ -93,7 +115,13 @@ public class Bing {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
 		bw.write(content);
 		bw.close();
-		return content;
+		
+		QueryOutput queryOutput = new Gson().fromJson(content, QueryOutput.class);
+		
+		if(qcr != null)
+			qcr.store(query, queryOutput);
+		
+		return queryOutput;
 	}
 
 	public static void main(String[] args) throws IOException {

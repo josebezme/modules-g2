@@ -1,8 +1,10 @@
 package g2.bing.json;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Results {
+public class Results implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String __next;
 	private List<Result> results;
 

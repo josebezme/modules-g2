@@ -1,6 +1,9 @@
 package g2.bing.json;
 
-public class QueryOutput {
+import java.io.Serializable;
+
+public class QueryOutput implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Results d;
 
 	public Results getD() {

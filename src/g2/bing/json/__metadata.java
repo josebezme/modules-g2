@@ -1,6 +1,9 @@
 package g2.bing.json;
 
-public class __metadata{
+import java.io.Serializable;
+
+public class __metadata implements Serializable {
+	private static final long serialVersionUID = 1L;
    	private String type;
    	private String uri;
 
