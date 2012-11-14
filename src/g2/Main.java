@@ -64,8 +64,7 @@ public class Main {
 		}
 		
 		// Create modules based on topics
-		Hierarchy h = new Hierarchy(topics.toArray(new String[0]), pruning);
-		
-		System.out.println("b");
+		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]),0.0, pruning);
+		h.writeDotFile("kahuna");
 	}
 }
