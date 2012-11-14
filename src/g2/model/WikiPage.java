@@ -2,6 +2,7 @@ package g2.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -68,12 +69,12 @@ public class WikiPage {
 		
 		int count = 0;
 		for (String title : that.titles) {
-			count += lowerFullText.split(title.toLowerCase()).length-1;
-			count += lowerLinkText.split(title.toLowerCase()).length-1;
+			count += lowerFullText.split(Pattern.quote(title.toLowerCase())).length-1;
+			count += lowerLinkText.split(Pattern.quote(title.toLowerCase())).length-1;
 		}
 		for (String synonym : that.synonyms) {
-			count += lowerFullText.split(synonym.toLowerCase()).length-1;
-			count += lowerLinkText.split(synonym.toLowerCase()).length-1;
+			count += lowerFullText.split(Pattern.quote(synonym.toLowerCase())).length-1;
+			count += lowerLinkText.split(Pattern.quote(synonym.toLowerCase())).length-1;
 		}
 		//System.out.println(count);
 		return count;
@@ -93,6 +94,7 @@ public class WikiPage {
 		Elements links = linkSection.select("a");
 		//System.out.println("---" + urlTitle + "---");
 		for (Element e : links) {
+			
 			if (e.text().matches(".*\\w.*")) {
 				//System.out.println(e.text());
 				redirects.add(e.text());

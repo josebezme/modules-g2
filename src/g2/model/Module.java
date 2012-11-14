@@ -14,7 +14,7 @@ public class Module extends Hierarchical {
   public Module(String title, String url) {
 	  wikiPage = new WikiPage(url);
 	  titles = new ArrayList<String>();
-	  titles.add(title);
+	  titles.add(title.trim());
 	  synonyms = wikiPage.redirects();
   }
   
@@ -36,7 +36,7 @@ public class Module extends Hierarchical {
   public String toString() {
 	  String s = titles.get(0);
 	  for (int i = 1; i < titles.size(); i++)
-		  s += ", " + titles.get(i);
+		  s += "\\n" + titles.get(i);
 	  return s;
   }
   
