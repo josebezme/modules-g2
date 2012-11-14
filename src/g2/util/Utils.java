@@ -1,10 +1,13 @@
 package g2.util;
 
+import g2.bing.SubTopic;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,12 @@ public class Utils {
 	public static String getHost(String url) throws MalformedURLException {
 		URL urlObject = new URL(url);
 		return urlObject.getHost();
+	}
+
+	public static SubTopic toSubTopic(String pageName, String url) {
+		pageName = URLDecoder.decode(pageName);
+		url = URLDecoder.decode(url);
+		return new SubTopic(pageName, url);
 	}
 
 }

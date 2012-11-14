@@ -2,6 +2,7 @@ package g2.bing;
 
 import g2.bing.json.QueryOutput;
 import g2.bing.json.Result;
+import g2.util.Utils;
 import g2.util.cleaners.WikipediaURLToName;
 
 import java.io.File;
@@ -84,9 +85,8 @@ public class QueryCache implements Serializable {
 			if (pageName == null)
 				continue;
 			
-			pageName = URLDecoder.decode(pageName);
-			url = URLDecoder.decode(url);
-			SubTopic subtopic = new SubTopic(pageName, url);
+			SubTopic subtopic = Utils.toSubTopic(pageName, url);
+			
 			System.out.println(subtopic);
 			list.add(subtopic);
 		}

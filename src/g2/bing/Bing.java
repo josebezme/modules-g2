@@ -1,6 +1,8 @@
 package g2.bing;
 import g2.bing.json.QueryOutput;
 import g2.bing.json.Result;
+import g2.model.Course;
+import g2.util.Utils;
 import g2.util.cleaners.WikipediaURLToName;
 
 import java.io.BufferedWriter;
@@ -11,10 +13,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 
 /* Acknowledgements:
@@ -51,7 +56,7 @@ public class Bing {
 	 * @return
 	 * @throws IOException
 	 */
-	public String getTopicFromTermArea(String area, String terms) throws IOException {
+	public SubTopic getTopicFromTermArea(String area, String terms) throws IOException {
 		final String query = QueryGenerator.generateQueryForSubjectArea(area, terms);
 
 		final QueryOutput queryOutput = query(query);
@@ -63,7 +68,7 @@ public class Bing {
 				continue;
 			
 			String pageName = WikipediaURLToName.getPageNameFromURL(url);
-			return pageName;
+			return Utils.toSubTopic(pageName, url);
 		}
 		
 		return null;
@@ -122,6 +127,28 @@ public class Bing {
 			qcr.store(query, queryOutput);
 		
 		return queryOutput;
+	}
+	
+	public Multimap<Course, SubTopic> getTopicsFromCourses(Collection<Course> courses, String area) {
+		Multimap<Course, SubTopic> courseTopics = LinkedHashMultimap.create();
+		
+		SubTopic topic;
+		for(Course c : courses) {
+			System.out.println("Getting topics for course: " + c);
+			for(String term : c.getTerms()) {
+				try {
+					topic = getTopicFromTermArea(area, term);
+					
+					if(topic != null) {
+						courseTopics.put(c, topic);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return courseTopics;
 	}
 
 	public static void main(String[] args) throws IOException {

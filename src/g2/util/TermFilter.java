@@ -56,7 +56,7 @@ public class TermFilter {
 		
 		@Override
 		public boolean apply(String term) {
-			if(term.trim().length() < 2) {
+			if(term.trim().length() < 3) {
 				return false;
 			}
 			
@@ -173,10 +173,8 @@ public class TermFilter {
 	public static void filterTerms(Multimap<String, Course> hosts2courses) {
 		for(String host : hosts2courses.keySet()) {
 			List<Course> courses = new LinkedList<Course>(hosts2courses.get(host));
-//			for(int i = 0; i < 3; i++) {
-//				Course c = courses.get(i);
 			for(Course c : courses) {
-//				logger.info("Getting terms for course: " + c);
+				logger.info("Getting terms for course: " + c);
 				String desc = c.htmlElement.text().toLowerCase();
 				logger.debug(desc);
 				
@@ -192,7 +190,6 @@ public class TermFilter {
 				
 				List<String> termList = new LinkedList<String>();
 				for(String sentence : sentences) {
-//					String terms[] = sentence.split("(,|;|\\sand\\s|\\sor\\s)");
 					String terms[] = sentence.split("(,|;|:)");
 					
 					for(String term : terms) {
@@ -226,7 +223,6 @@ public class TermFilter {
 						} else {
 							termList.add(term.trim());
 						}
-						
 					}
 				}
 				
@@ -234,10 +230,6 @@ public class TermFilter {
 				String terms[] = Iterables.toArray(it, String.class);
 				termList.clear();
 				termList.addAll(Arrays.asList(terms));
-				
-				for(String term : termList) {
-					System.out.println(term);
-				}
 				
 				c.getTerms().addAll(termList);
 			}

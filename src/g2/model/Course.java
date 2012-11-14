@@ -53,7 +53,6 @@ public class Course extends Hierarchical {
 	public Element htmlElement;
 
 	private List<String> terms = new ArrayList<String>();
-	private Set<Course> prereqs = new HashSet<Course>();
 	
 	public Course(String name, Element e, Element titleElement) {
 		this.name = name;
@@ -87,8 +86,8 @@ public class Course extends Hierarchical {
 	@Override
 	public String toString() {
 		Set<CourseId> courses = new HashSet<CourseId>();
-		for(Course c : prereqs) {
-			courses.add(c.courseId);
+		for(Hierarchical h : prereqs()) {
+			courses.add(((Course) h).courseId);
 		}
 		
 		return courseId + " - " + name + " Prereqs[" + Joiner.on(",").join(courses) + "]";
