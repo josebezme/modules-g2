@@ -74,7 +74,8 @@ public class Main {
 				Collection<Course> courses = host2courses.get(host);
 				Multimap<Course, SubTopic> newTopics = bing.getTopicsFromCourses(courses, area);
 				
-				for(SubTopic topic : newTopics.values()) {
+				Set<SubTopic> topicSet = new HashSet<SubTopic>(newTopics.values());
+				for(SubTopic topic : topicSet) {
 					
 					Integer occurence = null;
 					if(urls.length > 1) {

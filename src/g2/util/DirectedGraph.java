@@ -42,8 +42,6 @@ public class DirectedGraph {
 		while(stack.size() > 0) {
 			current = stack.pop();
 			
-			System.out.println("Doing " + count++ + " of " + modules.size() + " modules...");
-			
 			Module m = new Module(current);
 			sorted.remove(current);
 			newGraph.add(m);
