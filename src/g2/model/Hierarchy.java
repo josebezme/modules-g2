@@ -20,7 +20,7 @@ public class Hierarchy {
 			prune();
 	}
 	
-	public Hierarchy(SubTopic[] topics, double threshold, boolean doPruning) {
+	public Hierarchy(SubTopic[] topics, double threshold, boolean doPruning, String domain) {
 		this.doPruning = doPruning;
 		
 		setModules(new ArrayList<Module>());
@@ -30,7 +30,8 @@ public class Hierarchy {
 		for (SubTopic t : topics) {
 			logger.info("Creating module for topic: " + t);
 			Module m = new Module(t);
-			if (m.titles != null && !m.titles.contains("Mathematics") && !m.synonyms.contains("Mathematics"))
+			//if (m.titles != null && !m.titles.contains("Mathematics") && !m.synonyms.contains("Mathematics"))
+			if (m.titles != null && !containsSubstring(m.titles, domain) && !containsSubstring(m.synonyms, domain))
 				modules.add(m);
 		}
 			
@@ -44,9 +45,10 @@ public class Hierarchy {
 		
 		logger.info("Merging cycles...");
 		//mergeCycles();
-		mergeCycles(2);
+		//mergeCycles(2);
 		//mergePairs();
 		removeCycles();
+		//mergeCycle();
 		//mergeCycles();
 		
 		logger.info("Pruning redundant edges...");
@@ -218,7 +220,7 @@ public class Hierarchy {
 		modules.add(SubTopic.getSubtopic("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)"));
 		modules.add(SubTopic.getSubtopic("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity"));
 		modules.add(SubTopic.getSubtopic("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent"));	
-		Hierarchy h1 = new Hierarchy(modules.toArray(new SubTopic[0]), 0.0, true);
+		Hierarchy h1 = new Hierarchy(modules.toArray(new SubTopic[0]), 0.0, true, "Mathematics");
 		h1.writeDotFile("Hierarchy");
 		
 		/*ArrayList<Module> testMods = new ArrayList<Module>();
@@ -240,11 +242,12 @@ public class Hierarchy {
 
 	private boolean containsSubstring(List<String> synonyms, String match) {
 		for (String s : synonyms) {
-			if (s.toLowerCase().contains(match))
+			if (s.toLowerCase().contains(match.toLowerCase()))
 				return true;
 		}
 		return false;
 	}
+	
 	public void setModules(List<Module> modules) {
 		this.modules = modules;
 	}
