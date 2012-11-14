@@ -3,6 +3,8 @@ package g2.model;
 import java.util.List;
 import java.util.ArrayList;
 
+import g2.bing.SubTopic;
+
 public class Hierarchy {
 	private List<Module> modules;
 	private boolean doPruning;
@@ -14,59 +16,30 @@ public class Hierarchy {
 			prune();
 	}
 	
-	public Hierarchy(String[] wikiURLTitle, boolean doPruning) {
+	public Hierarchy(SubTopic[] topics, double threshold, boolean doPruning) {
 		this.doPruning = doPruning;
 		
 		modules = new ArrayList<Module>();
 			
 		// TODO: Check redirects so that we're not creating redundant modules
-		for (String s : wikiURLTitle)
-			modules.add(new Module(s));
+		for (SubTopic t : topics)
+			modules.add(new Module(t.topic, t.url));
 			
 		for (Module a : modules) {
 			for (Module b : modules) {
 				if (a != b)
-					a.checkWikiForDependencyOn(b);
+					a.checkWikiForDependencyOn(b, threshold);
 			}
 		}
 		
 		mergeCycles();
-		
-		/*for (Module end : modules) {
-			for (Module start : modules) {
-				if (end.reachableFrom(start) != null)
-					System.out.println(end.toString() + " is reachable from " + start.toString());
-				else 
-					System.out.println(end.toString() + " is not reachable from " + start.toString());
-			}
-		}*/
 		
 		if (doPruning)
 			prune();
 	}
 	
 	public void mergeCycles() {
-		// TODO: Remove this block (should be unnecessary)
-		boolean foundMerge;
-		do {
-			foundMerge = false;
-			for (Module a : modules) {
-				for (Module b : modules) {
-					if (a != b && a.hasPrereq(b) && b.hasPrereq(a)) {
-						//System.out.println("MERGE: " + a.toString() + " AND " + b.toString());
-						foundMerge = true;
-						a.addModule(b);
-						for (Module c : modules) {
-							if (c.hasPrereq(b)) {
-								c.removePrereq(b);
-								c.addPrereq(a);
-							}
-						}
-					}
-				}
-			}
-		} while (foundMerge);	
-		
+
 		boolean foundCycle;
 		do {
 			foundCycle = false;
@@ -128,13 +101,23 @@ public class Hierarchy {
 	}
 	
 	public static void main(String[] args) {
-		String[] urlSuffixes = {"Continuous_function", "Integral_(mathematics)", "Implicit_function",
+		/*String[] urlSuffixes = {"Continuous_function", "Integral_(mathematics)", "Implicit_function",
 								"Lagrange_error_bound", "Derivative_(mathematics)", "Euclidian_space",
-								"Transformation_(mathematics)", "Uniform_continuity", "Uniformly_convergent"};
-		Hierarchy h1 = new Hierarchy(urlSuffixes, true);
-		h1.writeDotFile("HierarchyPruning3");
+								"Transformation_(mathematics)", "Uniform_continuity", "Uniformly_convergent"};*/
+		ArrayList<SubTopic> modules = new ArrayList<SubTopic>();
+		modules.add(new SubTopic("Continuity", "Continuous_function"));
+		modules.add(new SubTopic("Integral", "Integral_(mathematics)"));
+		modules.add(new SubTopic("Implicit Function", "Implicit_function"));
+		modules.add(new SubTopic("Lagrange error bound", "Lagrange_error_bound"));
+		modules.add(new SubTopic("Derivative", "Derivative_(mathematics)"));
+		modules.add(new SubTopic("Euclidean space", "Euclidian_space"));
+		modules.add(new SubTopic("Transformation", "Transformation_(mathematics)"));
+		modules.add(new SubTopic("Uniform continuity", "Uniform_continuity"));
+		modules.add(new SubTopic("Uniformly convergent", "Uniformly_convergent"));	
+		Hierarchy h1 = new Hierarchy(modules.toArray(new SubTopic[0]), 0.0, true);
+		h1.writeDotFile("Hierarchy");
 		
-		ArrayList<Module> testMods = new ArrayList<Module>();
+		/*ArrayList<Module> testMods = new ArrayList<Module>();
 		for (int i = 0; i < 10; i++) {
 			testMods.add(new Module(i));
 		}
@@ -142,10 +125,13 @@ public class Hierarchy {
 		for (int i = 0; i < 9; i++) {
 			testMods.get(i).addPrereq(testMods.get(i+1));
 		}
-		testMods.get(9).addPrereq(testMods.get(5));
+		//testMods.get(9).addPrereq(testMods.get(5));
+		//testMods.get(6).addPrereq(testMods.get(4));
+		//testMods.get(6).removePrereq(testMods.get(4));
+		testMods.get(4).addPrereq(testMods.get(1));
 		
 		Hierarchy h2 = new Hierarchy(testMods, true);
-		h2.writeDotFile("Test");
+		h2.writeDotFile("Test5");*/
 	}
 
 }

@@ -8,12 +8,14 @@ import java.util.Set;
 public class Module extends Hierarchical {
   
   public List<String> titles;
+  public List<String> synonyms;
   private WikiPage wikiPage;
   
-  public Module(String urlTitle) {
+  public Module(String title, String urlTitle) {
 	  wikiPage = new WikiPage(urlTitle);
 	  titles = new ArrayList<String>();
-	  titles.add(wikiPage.title);
+	  titles.add(title);
+	  synonyms = wikiPage.redirects();
   }
   
   public Module(Integer i) {
@@ -23,6 +25,11 @@ public class Module extends Hierarchical {
   
   public void checkWikiForDependencyOn(Module that) {
 	  if (wikiPage.refersTo(that)) 
+		  addPrereq(that);
+  }
+  
+  public void checkWikiForDependencyOn(Module that, double threshold) {
+	  if (wikiPage.linkScore(that) > threshold) 
 		  addPrereq(that);
   }
   
@@ -49,7 +56,7 @@ public class Module extends Hierarchical {
   public static void main(String[] args) {
 		List<Module> modules = new ArrayList<Module>();
 		//modules.add(new Module("Continuity", "Continuity_(mathematics)"));
-		/*modules.add(new Module("Continuity", "Continuous_function"));
+		modules.add(new Module("Continuity", "Continuous_function"));
 		modules.add(new Module("Integral", "Integral_(mathematics)"));
 		modules.add(new Module("Implicit Function", "Implicit_function"));
 		modules.add(new Module("Lagrange error bound", "Lagrange_error_bound"));
@@ -57,9 +64,9 @@ public class Module extends Hierarchical {
 		modules.add(new Module("Euclidean space", "Euclidian_space"));
 		modules.add(new Module("Transformation", "Transformation_(mathematics)"));
 		modules.add(new Module("Uniform continuity", "Uniform_continuity"));
-		modules.add(new Module("Uniformly convergent", "Uniformly_convergent"));*/	
+		modules.add(new Module("Uniformly convergent", "Uniformly_convergent"));	
 		
-		modules.add(new Module("Continuous_function"));
+		/*modules.add(new Module("Continuous_function"));
 		modules.add(new Module("Integral_(mathematics)"));
 		modules.add(new Module("Implicit_function"));
 		modules.add(new Module("Lagrange_error_bound"));
@@ -67,7 +74,7 @@ public class Module extends Hierarchical {
 		modules.add(new Module("Euclidian_space"));
 		modules.add(new Module("Transformation_(mathematics)"));
 		modules.add(new Module("Uniform_continuity"));
-		modules.add(new Module("Uniformly_convergent"));	
+		modules.add(new Module("Uniformly_convergent"));	*/
 		
 		for (Module a : modules) {
 			for (Module b : modules) {
