@@ -64,14 +64,18 @@ public abstract class Hierarchical {
 	
 	/*public void removeCycle() {
 		HashSet<Hierarchical[]> visited = new HashSet<Hierarchical[]>();
-		ArrayList<Hierarchical> toVisit = new ArrayList<Hierarchical>();
+		ArrayList<Hierarchical[]> toVisit = new ArrayList<Hierarchical[]>();
 		
-		toVisit.add(this);
+		for (Hierarchical h : prereqs) {
+			toVisit.add(new Hierarchical[] {h, this} );
+		}
+		Hierarchical next 
+		
 		while (toVisit.size() > 0) {
 			Hierarchical next = toVisit.remove(0);
-			visited.add(new Hierarchical[] {next);
+			visited.add(next);
 			
-			for (Hierarchical h : next.prereqs()) {
+			for (Hierarchical h : next[0].prereqs()) {
 				if (h == start)
 					return next;
 				if (!visited.contains(h) && !toVisit.contains(h))

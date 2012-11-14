@@ -44,8 +44,8 @@ public class Hierarchy {
 		
 		logger.info("Merging cycles...");
 		//mergeCycles();
-		//mergeCycles(5);
-//		mergeCycles();
+		mergeCycles(5);
+		//mergeCycles();
 		
 		logger.info("Pruning redundant edges...");
 		if (doPruning)
@@ -59,8 +59,8 @@ public class Hierarchy {
 			foundCycle = false;
 			for (Module a : modules) {
 				Module b = (Module) a.reachableFrom(a);
-				while (b != null && a.size <= limit) {
-					System.out.println("SIZE: " + a.size);
+				while (b != null && a.size + b.size <= limit) {
+					//System.out.println("SIZE: " + (a.size + b.size));
 					foundCycle = true;
 					a.addModule(b);
 					
