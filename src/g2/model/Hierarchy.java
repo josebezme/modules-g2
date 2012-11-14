@@ -14,7 +14,7 @@ public class Hierarchy {
 	private boolean doPruning;
 	
 	public Hierarchy(ArrayList<Module> testMods, boolean doPruning) {
-		modules = testMods;
+		setModules(testMods);
 		mergeCycles();
 		if (doPruning)
 			prune();
@@ -23,7 +23,7 @@ public class Hierarchy {
 	public Hierarchy(SubTopic[] topics, double threshold, boolean doPruning) {
 		this.doPruning = doPruning;
 		
-		modules = new ArrayList<Module>();
+		setModules(new ArrayList<Module>());
 			
 		logger.info("Creating modules...");
 		// TODO: Check redirects so that we're not creating redundant modules
@@ -45,6 +45,7 @@ public class Hierarchy {
 		logger.info("Merging cycles...");
 		//mergeCycles();
 		//mergeCycles(5);
+//		mergeCycles();
 		
 		logger.info("Pruning redundant edges...");
 		if (doPruning)
@@ -137,7 +138,7 @@ public class Hierarchy {
 			if (m.numPrereqs() > 0 || numPostreqs(m) > 0)
 				newModules.add(m);
 		}
-		modules = newModules;
+		setModules(newModules);
 	}
 	
 	private int numPostreqs(Module pre) {
@@ -201,6 +202,10 @@ public class Hierarchy {
 		
 		Hierarchy h2 = new Hierarchy(testMods, true);
 		h2.writeDotFile("Test5");*/
+	}
+
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
 	}
 
 }
