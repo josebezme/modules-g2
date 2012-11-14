@@ -71,6 +71,10 @@ public class WikiPage {
 			count += lowerFullText.split(title.toLowerCase()).length-1;
 			count += lowerLinkText.split(title.toLowerCase()).length-1;
 		}
+		for (String synonym : that.synonyms) {
+			count += lowerFullText.split(synonym.toLowerCase()).length-1;
+			count += lowerLinkText.split(synonym.toLowerCase()).length-1;
+		}
 		//System.out.println(count);
 		return count;
 	}
