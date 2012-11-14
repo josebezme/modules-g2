@@ -160,9 +160,17 @@ public class TermFilter {
 	};
 	
 	public static void main(String[] args) {
-		String urls[] = {"http://www.uh.edu/academics/catalog/colleges/nsm/courses/math/"};
+		String urls[] = {"http://www.math.umn.edu/courses/"};
+		System.out.println("Checking hosts: " + Arrays.toString(urls));
 		Multimap<String, Course> hosts = C1CourseExtractor.extractCourses(urls);
+		
+		logger.info("Got courses: " + hosts);
+		
 		filterTerms(hosts);
+		
+		for(Course c : hosts.values()) {
+			logger.info("Course: " + c + " terms:" + c.getTerms());
+		}
 		
 //		for(String term : AND_TEST_SET) {
 //			List<String> terms = processAnd(term);
@@ -190,10 +198,12 @@ public class TermFilter {
 				
 				List<String> termList = new LinkedList<String>();
 				for(String sentence : sentences) {
-					String terms[] = sentence.split("(,|;|:)");
+					String terms[] = sentence.split("(,|;|:|\\)|\\()");
 					
 					for(String term : terms) {
 						term = term.trim();
+						
+						term = term.replace("/", " and ");
 						
 						// If we left a leading and
 						// from spliting remove it and carry on.

@@ -27,7 +27,7 @@ public class Hierarchy {
 			
 		// TODO: Check redirects so that we're not creating redundant modules
 		for (SubTopic t : topics) {
-			logger.info("Creating module for topic: " + t.topic);
+			logger.info("Creating module for topic: " + t);
 			modules.add(new Module(t.topic, t.url));
 		}
 			
