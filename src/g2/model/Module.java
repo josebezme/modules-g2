@@ -41,8 +41,16 @@ public class Module extends Hierarchical {
   }
   
   public void addModule(Module m) {
-	  for (String t : m.titles)
-		  titles.add(t);
+	  for (String t : m.titles) {
+		  if (!titles.contains(t))
+			  titles.add(t);
+		  if (synonyms.contains(t))
+			  synonyms.remove(t);
+	  }
+	  for (String s : m.synonyms) {
+		  if (!titles.contains(s) && !synonyms.contains(s))
+			  synonyms.add(s);
+	  }
 	  
 	  removePrereq(m);
 	  m.removePrereq(this);

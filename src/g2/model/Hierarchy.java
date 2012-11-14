@@ -74,9 +74,7 @@ public class Hierarchy {
 		
 		ArrayList<Module> newModules = new ArrayList<Module>();
 		for (Module m : modules) {
-			if (m.numPrereqs() > 0)
-				newModules.add(m);
-			else if (numPostreqs(m) > 0)
+			if (m.numPrereqs() > 0 || numPostreqs(m) > 0)
 				newModules.add(m);
 		}
 		modules = newModules;

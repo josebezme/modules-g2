@@ -3,11 +3,14 @@ package g2.model;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
+import java.util.Date;
 
 public class Digraph {
   
   public static boolean DigraphToFile(String file, List<Hierarchical> nodes) {
-    String fileName = file + ".dot";
+	  Date d = new Date();
+	  
+	String fileName = file + "-" + d.toString().replace(" ", "-") + ".dot";
     File f = new File(fileName);
     try {
       if (!f.createNewFile())
