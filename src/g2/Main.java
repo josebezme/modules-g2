@@ -63,8 +63,9 @@ public class Main {
 				Collection<Course> courses = host2courses.get(host);
 				Multimap<Course, SubTopic> newTopics = bing.getTopicsFromCourses(courses, area);
 				
-				for(SubTopic topic : newTopics.values()) {
-					
+				
+				Set<SubTopic> uniqueTopics = new HashSet<SubTopic>(newTopics.values());
+				for(SubTopic topic : uniqueTopics) {
 					Integer occurence = null;
 					if(urls.length > 1) {
 						if((occurence = subtopicOccurence.get(topic)) == null) {
@@ -82,6 +83,10 @@ public class Main {
 				}
 			}
 			
+			for(SubTopic topic : subtopicOccurence.keySet()) {
+				logger.info(subtopicOccurence.get(topic) + " : " + topic);
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -91,7 +96,7 @@ public class Main {
 		// Create modules based on topics
 		
 		logger.info("Building hierarchy for " + topics.size() +  " topics ...");
-		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]), 20.0, pruning);
+		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]), 0.0, pruning);
 		h.writeDotFile("kahuna");
 	}
 }
