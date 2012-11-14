@@ -25,12 +25,14 @@ public class Hierarchy {
 		
 		modules = new ArrayList<Module>();
 			
+		logger.info("Creating modules...");
 		// TODO: Check redirects so that we're not creating redundant modules
 		for (SubTopic t : topics) {
 			logger.info("Creating module for topic: " + t);
 			modules.add(new Module(t.topic, t.url));
 		}
 			
+		logger.info("Checking for module dependencies...");
 		for (Module a : modules) {
 			for (Module b : modules) {
 				if (a != b)
@@ -38,8 +40,10 @@ public class Hierarchy {
 			}
 		}
 		
+		logger.info("Merging cycles...");
 		mergeCycles();
 		
+		logger.info("Pruning redundant edges...");
 		if (doPruning)
 			prune();
 	}

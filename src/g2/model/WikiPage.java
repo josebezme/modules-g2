@@ -89,9 +89,10 @@ public class WikiPage {
 		Elements links = linkSection.select("a");
 		//System.out.println("---" + urlTitle + "---");
 		for (Element e : links) {
-			//if (e.text())
-			//System.out.println(e.text());
-			redirects.add(e.text());
+			if (e.text().matches(".*\\w.*")) {
+				//System.out.println(e.text());
+				redirects.add(e.text());
+			}
 		}
 		//System.out.println();
 		return redirects;
