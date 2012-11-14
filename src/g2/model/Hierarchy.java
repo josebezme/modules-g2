@@ -105,15 +105,15 @@ public class Hierarchy {
 								"Lagrange_error_bound", "Derivative_(mathematics)", "Euclidian_space",
 								"Transformation_(mathematics)", "Uniform_continuity", "Uniformly_convergent"};*/
 		ArrayList<SubTopic> modules = new ArrayList<SubTopic>();
-		modules.add(new SubTopic("Continuity", "Continuous_function"));
-		modules.add(new SubTopic("Integral", "Integral_(mathematics)"));
-		modules.add(new SubTopic("Implicit Function", "Implicit_function"));
-		modules.add(new SubTopic("Lagrange error bound", "Lagrange_error_bound"));
-		modules.add(new SubTopic("Derivative", "Derivative_(mathematics)"));
-		modules.add(new SubTopic("Euclidean space", "Euclidian_space"));
-		modules.add(new SubTopic("Transformation", "Transformation_(mathematics)"));
-		modules.add(new SubTopic("Uniform continuity", "Uniform_continuity"));
-		modules.add(new SubTopic("Uniformly convergent", "Uniformly_convergent"));	
+		modules.add(new SubTopic("Continuity", "http://en.wikipedia.org/wiki/Continuous_function"));
+		modules.add(new SubTopic("Integral", "http://en.wikipedia.org/wiki/Integral_(mathematics)"));
+		modules.add(new SubTopic("Implicit Function", "http://en.wikipedia.org/wiki/Implicit_function"));
+		modules.add(new SubTopic("Lagrange error bound", "http://en.wikipedia.org/wiki/Lagrange_error_bound"));
+		modules.add(new SubTopic("Derivative", "http://en.wikipedia.org/wiki/Derivative_(mathematics)"));
+		modules.add(new SubTopic("Euclidean space", "http://en.wikipedia.org/wiki/Euclidian_space"));
+		modules.add(new SubTopic("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)"));
+		modules.add(new SubTopic("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity"));
+		modules.add(new SubTopic("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent"));	
 		Hierarchy h1 = new Hierarchy(modules.toArray(new SubTopic[0]), 0.0, true);
 		h1.writeDotFile("Hierarchy");
 		

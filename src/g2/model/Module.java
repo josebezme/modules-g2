@@ -11,8 +11,8 @@ public class Module extends Hierarchical {
   public List<String> synonyms;
   private WikiPage wikiPage;
   
-  public Module(String title, String urlTitle) {
-	  wikiPage = new WikiPage(urlTitle);
+  public Module(String title, String url) {
+	  wikiPage = new WikiPage(url);
 	  titles = new ArrayList<String>();
 	  titles.add(title);
 	  synonyms = wikiPage.redirects();
@@ -56,15 +56,15 @@ public class Module extends Hierarchical {
   public static void main(String[] args) {
 		List<Module> modules = new ArrayList<Module>();
 		//modules.add(new Module("Continuity", "Continuity_(mathematics)"));
-		modules.add(new Module("Continuity", "Continuous_function"));
-		modules.add(new Module("Integral", "Integral_(mathematics)"));
-		modules.add(new Module("Implicit Function", "Implicit_function"));
-		modules.add(new Module("Lagrange error bound", "Lagrange_error_bound"));
-		modules.add(new Module("Derivative", "Derivative_(mathematics)"));
-		modules.add(new Module("Euclidean space", "Euclidian_space"));
-		modules.add(new Module("Transformation", "Transformation_(mathematics)"));
-		modules.add(new Module("Uniform continuity", "Uniform_continuity"));
-		modules.add(new Module("Uniformly convergent", "Uniformly_convergent"));	
+		modules.add(new Module("Continuity", "http://en.wikipedia.org/wiki/Continuous_function"));
+		modules.add(new Module("Integral", "http://en.wikipedia.org/wiki/Integral_(mathematics)"));
+		modules.add(new Module("Implicit Function", "http://en.wikipedia.org/wiki/Implicit_function"));
+		modules.add(new Module("Lagrange error bound", "http://en.wikipedia.org/wiki/Lagrange_error_bound"));
+		modules.add(new Module("Derivative", "http://en.wikipedia.org/wiki/Derivative_(mathematics)"));
+		modules.add(new Module("Euclidean space", "http://en.wikipedia.org/wiki/Euclidian_space"));
+		modules.add(new Module("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)"));
+		modules.add(new Module("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity"));
+		modules.add(new Module("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent"));	
 		
 		/*modules.add(new Module("Continuous_function"));
 		modules.add(new Module("Integral_(mathematics)"));

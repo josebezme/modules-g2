@@ -10,21 +10,23 @@ import org.jsoup.select.Elements;
 
 public class WikiPage {
 	private static final String wikiUrlPrefix = "http://en.wikipedia.org/wiki/";
+	private static final String redirectUrlPrefix = "http://toolserver.org/~dispenser/cgi-bin/rdcheck.py?page=";
 	private ArrayList<String> outLinks;
 	private String urlTitle;
 	public String title;
 	private String fullText;
 	private String linkText;
 	
-	public WikiPage(String urlTitle) {
-		this.urlTitle = urlTitle;
+	public WikiPage(String url) {
+		String[] split = url.split("/");
+		this.urlTitle = split[split.length-1];
 		
 		fullText = " ";
 		linkText = " ";
 		
 		Document doc = null;
 		try {
-			doc = Jsoup.connect(wikiUrlPrefix + urlTitle).get();
+			doc = Jsoup.connect(url).get();
 		}
 		catch (Exception e) {
 			System.err.println(e.toString());
@@ -73,6 +75,14 @@ public class WikiPage {
 	}
 	
 	public List<String> redirects() {
+		Document doc = null;
+		try {
+			doc = Jsoup.connect(redirectUrlPrefix + urlTitle).get();
+		}
+		catch (Exception e) {
+			System.err.println(e.toString());
+		}
+		Element linkSection = doc.select("ul").get(0);
 		return null;
 	}
 	
