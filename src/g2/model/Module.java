@@ -16,13 +16,19 @@ public class Module extends Hierarchical {
   
   private List<SubTopic> subtopics;
   
+  public int size;
+  
   public Module(SubTopic t) {
 	  wikiPage = new WikiPage(t.url);
+	  if (wikiPage.timedOut)
+		  return;
 	  titles = new ArrayList<String>();
-	  titles.add(t.topic.trim());
+	  titles.add(t.topic);
 	  synonyms = wikiPage.redirects();
+	  synonyms.add(wikiPage.title);
 	  subtopics = new ArrayList<SubTopic>();
 	  subtopics.add(t);
+	  size = 1;
   }
   
   public Module(Integer i) {
@@ -41,10 +47,15 @@ public class Module extends Hierarchical {
   }
   
   public String toString() {
-	  String s = titles.get(0);
+	  String s = removeDisambig(titles.get(0));
 	  for (int i = 1; i < titles.size(); i++)
-		  s += "\\n" + titles.get(i);
+		  s += "\\n" + removeDisambig(titles.get(i));
 	  return s;
+  }
+  
+  private String removeDisambig(String title) {
+	  String[] spl = title.split("\\(");
+	  return spl[0].trim();
   }
   
 	public List<Course> getCourses() {
@@ -78,7 +89,8 @@ public class Module extends Hierarchical {
 	  }
 	  
 	  for (SubTopic s : m.subtopics) {
-			  subtopics.add(s);
+		  if (!subtopics.contains(s))
+			  	subtopics.add(s);
 	  }
 	  
 	  removePrereq(m);
@@ -90,6 +102,8 @@ public class Module extends Hierarchical {
 			  addPrereq(pre);
 	  }
 	  m.clearPrereqs();
+	  
+	  size++;
   }
   
   public static void main(String[] args) {
