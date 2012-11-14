@@ -139,8 +139,11 @@ public class Bing {
 				try {
 					topic = getTopicFromTermArea(area, term);
 					
+					
 					if(topic != null) {
 						courseTopics.put(c, topic);
+						/* Add the course to the topic's course store. */
+						topic.addCourse(c);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -29,13 +29,13 @@ public class Hierarchy {
 		// TODO: Check redirects so that we're not creating redundant modules
 		for (SubTopic t : topics) {
 			logger.info("Creating module for topic: " + t);
-			modules.add(new Module(t.topic, t.url));
+			modules.add(new Module(t));
 		}
 			
 		logger.info("Checking for module dependencies...");
 		for (Module a : modules) {
 			for (Module b : modules) {
-				if (a != b)
+				if (a != b && a.hasCourseIntersection(b))
 					a.checkWikiForDependencyOn(b, threshold);
 			}
 		}
@@ -114,15 +114,15 @@ public class Hierarchy {
 								"Lagrange_error_bound", "Derivative_(mathematics)", "Euclidian_space",
 								"Transformation_(mathematics)", "Uniform_continuity", "Uniformly_convergent"};*/
 		ArrayList<SubTopic> modules = new ArrayList<SubTopic>();
-		modules.add(new SubTopic("Continuity", "http://en.wikipedia.org/wiki/Continuous_function"));
-		modules.add(new SubTopic("Integral", "http://en.wikipedia.org/wiki/Integral_(mathematics)"));
-		modules.add(new SubTopic("Implicit Function", "http://en.wikipedia.org/wiki/Implicit_function"));
-		modules.add(new SubTopic("Lagrange error bound", "http://en.wikipedia.org/wiki/Lagrange_error_bound"));
-		modules.add(new SubTopic("Derivative", "http://en.wikipedia.org/wiki/Derivative_(mathematics)"));
-		modules.add(new SubTopic("Euclidean space", "http://en.wikipedia.org/wiki/Euclidian_space"));
-		modules.add(new SubTopic("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)"));
-		modules.add(new SubTopic("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity"));
-		modules.add(new SubTopic("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent"));	
+		modules.add(SubTopic.getSubtopic("Continuity", "http://en.wikipedia.org/wiki/Continuous_function"));
+		modules.add(SubTopic.getSubtopic("Integral", "http://en.wikipedia.org/wiki/Integral_(mathematics)"));
+		modules.add(SubTopic.getSubtopic("Implicit Function", "http://en.wikipedia.org/wiki/Implicit_function"));
+		modules.add(SubTopic.getSubtopic("Lagrange error bound", "http://en.wikipedia.org/wiki/Lagrange_error_bound"));
+		modules.add(SubTopic.getSubtopic("Derivative", "http://en.wikipedia.org/wiki/Derivative_(mathematics)"));
+		modules.add(SubTopic.getSubtopic("Euclidean space", "http://en.wikipedia.org/wiki/Euclidian_space"));
+		modules.add(SubTopic.getSubtopic("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)"));
+		modules.add(SubTopic.getSubtopic("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity"));
+		modules.add(SubTopic.getSubtopic("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent"));	
 		Hierarchy h1 = new Hierarchy(modules.toArray(new SubTopic[0]), 0.0, true);
 		h1.writeDotFile("Hierarchy");
 		

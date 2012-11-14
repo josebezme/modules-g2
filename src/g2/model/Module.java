@@ -1,7 +1,10 @@
 package g2.model;
 
+import g2.bing.SubTopic;
+
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -11,11 +14,15 @@ public class Module extends Hierarchical {
   public List<String> synonyms;
   private WikiPage wikiPage;
   
-  public Module(String title, String url) {
-	  wikiPage = new WikiPage(url);
+  private List<SubTopic> subtopics;
+  
+  public Module(SubTopic t) {
+	  wikiPage = new WikiPage(t.url);
 	  titles = new ArrayList<String>();
-	  titles.add(title.trim());
+	  titles.add(t.topic.trim());
 	  synonyms = wikiPage.redirects();
+	  subtopics = new ArrayList<SubTopic>();
+	  subtopics.add(t);
   }
   
   public Module(Integer i) {
@@ -40,6 +47,24 @@ public class Module extends Hierarchical {
 	  return s;
   }
   
+	public List<Course> getCourses() {
+		LinkedList<Course> courses = new LinkedList<Course>();
+		for(SubTopic st : subtopics) {
+			courses.addAll(st.getCourses());
+		}
+		return courses;
+	}
+	
+	public boolean hasCourseIntersection(Module other) {
+		List<Course> a = getCourses();
+		List<Course> b = other.getCourses();
+		final int sum = a.size() + b.size();
+		HashSet<Course> union = new HashSet<Course>();
+		union.addAll(a);
+		union.addAll(b);
+		return union.size() < sum;
+	}
+  
   public void addModule(Module m) {
 	  for (String t : m.titles) {
 		  if (!titles.contains(t))
@@ -50,6 +75,10 @@ public class Module extends Hierarchical {
 	  for (String s : m.synonyms) {
 		  if (!titles.contains(s) && !synonyms.contains(s))
 			  synonyms.add(s);
+	  }
+	  
+	  for (SubTopic s : m.subtopics) {
+			  subtopics.add(s);
 	  }
 	  
 	  removePrereq(m);
@@ -66,15 +95,15 @@ public class Module extends Hierarchical {
   public static void main(String[] args) {
 		List<Module> modules = new ArrayList<Module>();
 		//modules.add(new Module("Continuity", "Continuity_(mathematics)"));
-		modules.add(new Module("Continuity", "http://en.wikipedia.org/wiki/Continuous_function"));
-		modules.add(new Module("Integral", "http://en.wikipedia.org/wiki/Integral_(mathematics)"));
-		modules.add(new Module("Implicit Function", "http://en.wikipedia.org/wiki/Implicit_function"));
-		modules.add(new Module("Lagrange error bound", "http://en.wikipedia.org/wiki/Lagrange_error_bound"));
-		modules.add(new Module("Derivative", "http://en.wikipedia.org/wiki/Derivative_(mathematics)"));
-		modules.add(new Module("Euclidean space", "http://en.wikipedia.org/wiki/Euclidian_space"));
-		modules.add(new Module("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)"));
-		modules.add(new Module("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity"));
-		modules.add(new Module("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent"));	
+		modules.add(new Module(SubTopic.getSubtopic("Continuity", "http://en.wikipedia.org/wiki/Continuous_function")));
+		modules.add(new Module(SubTopic.getSubtopic("Integral", "http://en.wikipedia.org/wiki/Integral_(mathematics)")));
+		modules.add(new Module(SubTopic.getSubtopic("Implicit Function", "http://en.wikipedia.org/wiki/Implicit_function")));
+		modules.add(new Module(SubTopic.getSubtopic("Lagrange error bound", "http://en.wikipedia.org/wiki/Lagrange_error_bound")));
+		modules.add(new Module(SubTopic.getSubtopic("Derivative", "http://en.wikipedia.org/wiki/Derivative_(mathematics)")));
+		modules.add(new Module(SubTopic.getSubtopic("Euclidean space", "http://en.wikipedia.org/wiki/Euclidian_space")));
+		modules.add(new Module(SubTopic.getSubtopic("Transformation", "http://en.wikipedia.org/wiki/Transformation_(mathematics)")));
+		modules.add(new Module(SubTopic.getSubtopic("Uniform continuity", "http://en.wikipedia.org/wiki/Uniform_continuity")));
+		modules.add(new Module(SubTopic.getSubtopic("Uniformly convergent", "http://en.wikipedia.org/wiki/Uniformly_convergent")));	
 		
 		/*modules.add(new Module("Continuous_function"));
 		modules.add(new Module("Integral_(mathematics)"));

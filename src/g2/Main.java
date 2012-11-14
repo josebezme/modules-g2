@@ -45,11 +45,11 @@ public class Main {
 		TermFilter.filterTerms(host2courses);
 		
 		
-		/* Daniel's testing labelling here */
-		Collection<Course> coursesCollection = host2courses.values();
-		TestPrerequisiteDepth.label(coursesCollection);
-		System.exit(0);
-		/* End labelling testing */
+//		/* Daniel's testing labelling here */
+//		Collection<Course> coursesCollection = host2courses.values();
+//		TestPrerequisiteDepth.label(coursesCollection);
+//		System.exit(0);
+//		/* End labelling testing */
 		
 		
 		
