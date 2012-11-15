@@ -15,6 +15,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,7 +102,19 @@ public class Bing {
 		final String bingURL = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Web?Query=%27"
 				+ encodedQuery + "%27&$top=10&$format=Json";
 
-		String accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+		
+		InputStream propStream = Bing.class.getResourceAsStream("local.properties");
+		String accountKeyEnc;
+		if(propStream != null) {
+			Properties p = new Properties();
+			p.load(propStream);
+			if((accountKeyEnc = p.getProperty("bing.key")) == null) {
+				accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+			}
+		} else {
+			accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+		}
+		
 		URL url = new URL(bingURL);
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
