@@ -4,6 +4,7 @@ import g2.model.Course;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,11 +23,16 @@ public class C1CourseExtractor {
 	private C1CourseExtractor() { // static methods.
 	}
 
-	public static void main(String[] args) throws Exception {
-		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
+	public static void main(String[] args) throws Exception {		
+//		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
+		String urls[] = {"http://www.mce.caltech.edu/academics/course_desc"};
+		System.out.println("Extracting urls : " + Arrays.toString(urls));
 		
 		Multimap<String, Course> titles = extractCourses(urls);
 		
+		if(titles.size() == 0) {
+			System.out.println("no titles found.");
+		}
 		for(String key: titles.keySet()) {
 			logger.info("host: " + key);
 			for(Course course : titles.get(key)) {
@@ -62,10 +68,21 @@ public class C1CourseExtractor {
 		
 		return courses;
 	}
-
+	
 	private static Set<Course> process(String url) throws IOException {
+		Set<Course> potentialTitles = process(url, "p");
+		
+		if(potentialTitles.size() < 1) {
+			// try differen tag.
+			potentialTitles = process(url, "li");
+		}
+		
+		return potentialTitles;
+	}
+
+	private static Set<Course> process(String url, String tag) throws IOException {
 		Document doc = Jsoup.connect(url).get();
-		Elements paragraphs = doc.select("p");
+		Elements paragraphs = doc.select(tag);
 		logger.debug("===" + url + "===");
 		
 		Set<Course> potentialCourses = new HashSet<Course>();
