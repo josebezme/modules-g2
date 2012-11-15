@@ -1,4 +1,4 @@
-http://me.columbia.edu/courses-6
+http://apps.college.columbia.edu/unify/bulletinSearch.php?school=EN&departmentVar=MECE&header=me.columbia.edu/admin/html/course_header.html&footer=me.columbia.edu/admin/html/course_footer.html
 http://www.mce.caltech.edu/academics/course_desc
 https://www.seas.harvard.edu/academics/areas/engineering-sciences-courses
 http://www.enme.umd.edu/undergrad/courses/core.html
