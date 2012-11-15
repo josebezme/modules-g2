@@ -15,8 +15,6 @@ public class WikiPage {
 	private ArrayList<String> linkTitles;
 	private String urlTitle;
 	public String title;
-	private String fullText;
-	private String linkText;
 	public boolean timedOut = false;
 	
 	public WikiPage(String url) {
@@ -24,10 +22,7 @@ public class WikiPage {
 		
 		String[] split = url.split("/");
 		this.urlTitle = split[split.length-1];
-		
-		fullText = " ";
-		linkText = " ";
-		
+
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(url).get();
@@ -47,14 +42,9 @@ public class WikiPage {
 				String linkTitle = l.attr("title").trim();
 				if (linkTitle.length() > 0) {
 					linkTitles.add(l.attr("title"));
-					//System.out.println("ADD: " + l.attr("title"));
 				}
 			}
-			fullText = fullText.concat(p.text());
 		}
-		Elements links = doc.select("a");
-		for (Element a : links)
-			linkText = linkText.concat(a.text());
 	}
 	
 	private String extractTitle(String titleTag) {
@@ -66,34 +56,6 @@ public class WikiPage {
 		/*spl = title.split("\\(");
 		return spl[0].trim();*/
 	}
-	
-	// TODO: return a numerical score, instead of a boolean
-	/*public boolean refersTo(Module that) {
-		String lowerFullText = fullText.toLowerCase();
-		String lowerLinkText = linkText.toLowerCase();
-		for (String title : that.titles) {
-			if (lowerFullText.contains(title.toLowerCase()) && lowerLinkText.contains(title.toLowerCase()))
-				return true;
-		}
-		return false;
-	}
-	
-	public int linkScore(Module that) {
-		String lowerFullText = fullText.toLowerCase() + " ";
-		String lowerLinkText = linkText.toLowerCase() + " ";
-		
-		int count = 0;
-		for (String title : that.titles) {
-			count += lowerFullText.split(Pattern.quote(title.toLowerCase())).length-1;
-			count += lowerLinkText.split(Pattern.quote(title.toLowerCase())).length-1;
-		}
-		for (String synonym : that.synonyms) {
-			count += lowerFullText.split(Pattern.quote(synonym.toLowerCase())).length-1;
-			count += lowerLinkText.split(Pattern.quote(synonym.toLowerCase())).length-1;
-		}
-		//System.out.println(count);
-		return count;
-	}*/
 	
 	public boolean refersTo(Module that) {
 		for (String linkTitle : linkTitles) {
@@ -113,16 +75,10 @@ public class WikiPage {
 		int count = 0;
 		for (String linkTitle : linkTitles) {
 			for (String title : that.titles) {
-				/*System.out.println("Link title: " + linkTitle);
-				System.out.println("Title: " + title);
-				System.out.println();*/
 				if (linkTitle.equals(title))
 					count++;
 			}
 			for (String synonym : that.synonyms) {
-				/*System.out.println("Link title: " + linkTitle);
-				System.out.println("Synonym: " + synonym);
-				System.out.println();*/
 				if (linkTitle.equals(synonym))
 					count++;
 			}

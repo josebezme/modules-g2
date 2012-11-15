@@ -32,6 +32,9 @@ public class Hierarchy {
 			logger.info("Creating module for topic: " + t);
 			Module m = new Module(t);
 			//if (m.titles != null && !m.titles.contains("Mathematics") && !m.synonyms.contains("Mathematics"))
+			if (moduleExists(m)) {
+				addTitleToExisting(m);
+			}
 			if (!moduleExists(m) && m.titles != null && !containsSubstring(m.titles, domain) && !containsSubstring(m.synonyms, domain))
 				modules.add(m);
 		}
@@ -39,14 +42,15 @@ public class Hierarchy {
 		logger.info("Checking for module dependencies...");
 		for (Module a : modules) {
 			for (Module b : modules) {
-				if (a != b && a.hasCourseIntersection(b))
+				//if (a != b && a.hasCourseIntersection(b))
+				if (a != b)
 					a.checkWikiForDependencyOn(b, threshold);
 			}
 		}
 		
 		//logger.info("Merging cycles...");
 		//mergeCycles();
-		//mergeCycles(2);
+		mergeCycles(2);
 		//mergePairs();
 		//removeCycles();
 		//mergeCycle();
@@ -243,6 +247,7 @@ public class Hierarchy {
 
 	private boolean containsSubstring(List<String> synonyms, String match) {
 		for (String s : synonyms) {
+			s = s.split("\\(")[0];
 			if (s.toLowerCase().contains(match.toLowerCase()))
 				return true;
 			if (s.toLowerCase().contains("list of"))
@@ -257,6 +262,16 @@ public class Hierarchy {
 				return true;
 		}
 		return false;
+	}
+	
+	private void addTitleToExisting(Module m) {
+		for (Module existing : modules) {
+			if (existing.sameWiki(m)) {
+				existing.titles.add(m.titles.get(0));
+				return;
+			}
+				
+		}
 	}
 	
 	public void setModules(List<Module> modules) {
