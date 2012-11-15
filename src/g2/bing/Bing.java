@@ -121,7 +121,7 @@ public class Bing {
 		}
 		
 		accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
-		accountKeyEnc = "Yy9iYXVPV0xIS0R1cXpLbldXMEJWd1ZDbUhCWThQcXh4Zytpa3R6cXIzST06Yy9iYXVPV0xIS0R1cXpLbldXMEJWd1ZDbUhCWThQcXh4Zytpa3R6cXIzST0=";
+		//accountKeyEnc = "Yy9iYXVPV0xIS0R1cXpLbldXMEJWd1ZDbUhCWThQcXh4Zytpa3R6cXIzST06Yy9iYXVPV0xIS0R1cXpLbldXMEJWd1ZDbUhCWThQcXh4Zytpa3R6cXIzST0=";
 		URL url = new URL(bingURL);
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
