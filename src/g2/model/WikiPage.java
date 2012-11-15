@@ -1,8 +1,10 @@
 package g2.model;
 
+import g2.api.WikiCache;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,7 +19,18 @@ public class WikiPage {
 	public String title;
 	public boolean timedOut = false;
 	
-	public WikiPage(String url) {
+	public static WikiPage getByURL(String url) throws IOException {
+		WikiPage wikiCache = WikiCache.wc.get(url);
+		if (wikiCache != null) {
+			return wikiCache;
+		}
+		
+		WikiPage wp = new WikiPage(url);
+		WikiCache.wc.store(url, wp);
+		return wp;
+	}
+	
+	private WikiPage(String url) {
 		linkTitles = new ArrayList<String>();
 		
 		String[] split = url.split("/");

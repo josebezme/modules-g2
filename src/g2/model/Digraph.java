@@ -22,7 +22,7 @@ public class Digraph {
         w.write("\"" + to.toString() + "\"\n");
 
         for (Hierarchical from : to.prereqs()) {
-        	int score = to.linkScore(from);
+        	int score = from.linkScore(to);
           w.write("\"" + from.toString() + "\"->\"" + to.toString() + "\" [weight=" + score + ", label=\""+score+"\"]\n");
         }
       }

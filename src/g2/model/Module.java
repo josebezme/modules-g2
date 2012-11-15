@@ -21,7 +21,11 @@ public class Module extends Hierarchical {
   
   public Module(SubTopic t) {
 	  origTopic = t;
-	  wikiPage = new WikiPage(t.url);
+	  try {
+		  wikiPage = WikiPage.getByURL(t.url);
+	  } catch (Exception e) {
+		  e.printStackTrace();
+	  }
 	  if (wikiPage.timedOut)
 		  return;
 	  titles = new ArrayList<String>();
