@@ -102,6 +102,7 @@ public class Bing {
 				+ encodedQuery + "%27&$top=10&$format=Json";
 
 		String accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+		String backupAccountKey =  "c/bauOWLHKDuqzKnWW0BVwVCmHBY8Pqxxg+iktzqr3I=";
 		URL url = new URL(bingURL);
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
