@@ -102,8 +102,9 @@ public class Main {
 		
 		// Create modules based on topics
 		
+		String domain = "Mathematics";
 		logger.info("Building hierarchy for " + topics.size() +  " topics ...");
-		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]), 0.0, pruning, "Mathematics");
+		Hierarchy h = new Hierarchy(topics.toArray(new SubTopic[0]), 0.0, pruning, domain);
 		h.writeDotFile("graph");
 	}
 }

@@ -12,7 +12,7 @@ public class Module extends Hierarchical {
   
   public List<String> titles;
   public List<String> synonyms;
-  private WikiPage wikiPage;
+  public WikiPage wikiPage;
   private SubTopic origTopic;
   
   private List<SubTopic> subtopics;
@@ -25,7 +25,7 @@ public class Module extends Hierarchical {
 	  if (wikiPage.timedOut)
 		  return;
 	  titles = new ArrayList<String>();
-	  titles.add(t.topic);
+	  titles.add(removeParams(t.topic));
 	  synonyms = wikiPage.redirects();
 	  synonyms.add(wikiPage.title);
 	  subtopics = new ArrayList<SubTopic>();
@@ -90,6 +90,10 @@ public class Module extends Hierarchical {
 			}
 			return false;
 		}
+	
+	public boolean sameWiki(Module that) {
+		return wikiPage.title.equals(that.wikiPage.title);
+	}
 	
 	public boolean hasCourseIntersection(Module other) {
 		List<Course> a = getCourses();
@@ -194,4 +198,8 @@ public class Module extends Hierarchical {
 		
 		Digraph.DigraphToFile("Modules", nodes);
   }  
+  
+  private String removeParams(String title) {
+	  return title.split("\\?")[0];
+  }
 }
