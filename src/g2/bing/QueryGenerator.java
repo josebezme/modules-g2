@@ -6,6 +6,9 @@ public class QueryGenerator {
 	}
 	
 	public static String generateQueryForSubjectArea(String area, String term) {
-		return term + " " + area;
+		if (area.contains(" "))
+			return term + " \"" + area + "\"";
+		else
+			return term + " " + area;
 	}
 }
