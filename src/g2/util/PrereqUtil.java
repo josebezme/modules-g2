@@ -10,7 +10,7 @@ import com.google.common.collect.Multimap;
 
 public class PrereqUtil {
 	
-	private static final String PRE_REQ_REGEX = "[pP]rereq(.*)\\.\\s";
+	private static final String PRE_REQ_REGEX = "[pP]rereq(.*)\\.(\\s|$)";
 
 	public static void populatePrereqs(Multimap<String, Course> host2course) {
 		
@@ -23,6 +23,10 @@ public class PrereqUtil {
 			for(Course c : courses) {
 				String text = c.htmlElement.text();
 				m = p.matcher(text);
+				
+				if(c.courseId.id.equals("277")) {
+					System.out.println("yes");
+				}
 				
 				if(m.find()) {
 					prereqText = m.group(1);
