@@ -1,0 +1,36 @@
+LIST OF LINKS TO COURSES:
+http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/
+http://www-inst.eecs.berkeley.edu/classes-eecs.html
+http://cs.stanford.edu/courses/schedules/2012-2013.autumn.php
+https://enr-apps.as.cmu.edu/open/SOC/SOCServlet?Formname=GET_CLASSES&SUBMIT=Retrieve+Schedule&SEMESTER=F12&GRAD_UNDER=G&MINI=NO&DEPT=CS+
+http://cs.illinois.edu/graduate/academics?quicktabs_5=4
+http://www.cs.cornell.edu/courses/listofcscourses/index.htm
+http://www.cs.princeton.edu/academics/coursesched
+http://www.eecs.umich.edu/eecs/academics/eecs-courses.html
+https://courseweb.seas.ucla.edu/listClasses.php?subarea=COM+SCI
+http://www.cs.umd.edu/class/
+http://www.cs.wisc.edu/academic-programs/courses/current-classes
+http://www.cs.columbia.edu/education/courses/list?yearterm=20123
+http://www.cs.brown.edu/courses/
+http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml
+http://courses.rice.edu/admweb/swkscat.main?p_action=QUERY&p_term=201010&p_subj=COMP
+http://www.cs.unc.edu/cms/academics/course-home-page-links
+http://www.cs.usc.edu/academics/
+http://zoo.cs.yale.edu/classes/
+
+<p> TAG:
+http://www.cs.washington.edu/education/courses/ (title is anchor text for a link)
+http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html
+http://www.ucsd.edu/catalog/courses/CSE.html
+http://www.seas.harvard.edu/academics/areas/computer-science-courses
+http://bulletin.engineering.columbia.edu/courses-5
+http://www.cis.upenn.edu/ugrad/all-courses.shtml
+http://www.cs.umass.edu/ugrad-education/fall-12-course-descriptions
+
+<li> TAG:
+http://www.cms.caltech.edu/academics/course_desc
+
+NOT USEFUL:
+http://www.catalog.gatech.edu/colleges/coc/ugrad/comsci/threads.php
+
+
