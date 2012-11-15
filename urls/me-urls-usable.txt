@@ -1,0 +1,35 @@
+http://me.columbia.edu/courses-6
+http://www.mce.caltech.edu/academics/course_desc
+https://www.seas.harvard.edu/academics/areas/engineering-sciences-courses
+http://www.enme.umd.edu/undergrad/courses/core.html
+http://www.enme.umd.edu/undergrad/courses/electives.html
+
+
+No course description:
+http://web.mit.edu/catalog/degre.engin.ch2.html
+http://web.mit.edu/catalog/degre.engin.ch2a.html
+
+sequential header then p
+http://me.stanford.edu/groups/bme/courses.html
+
+pdf link:
+http://www.me.gatech.edu/undergraduate/me-syllabi
+
+link to coursE:
+http://www.me.berkeley.edu/StudentAffairs/Courses/TechnicalElectives.html
+http://registrar.princeton.edu/course-offerings/search_results.xml?term=1134&subject=MAE
+http://courses.cornell.edu/preview_program.php?catoid=14&poid=5564
+https://engineering.purdue.edu/ME/Academics/CourseSites.html
+http://courses.engr.wisc.edu/me/
+http://www.mech.northwestern.edu/courses/index.html
+
+sequential p's
+http://www.cmu.edu/me/undergraduate/ugcourses.html
+http://www.ucsd.edu/catalog/courses/MAE.html
+
+sequential span and no dept id:
+http://www.registrar.ucla.edu/schedule/catalog.aspx?sa=MECH%26AE&funsel=3
+
+no dept id:
+http://ame-www.usc.edu/classes/classes_all.shtml
+http://me.ucsb.edu/undergraduate-program/academics/courses
