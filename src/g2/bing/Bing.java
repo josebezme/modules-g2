@@ -34,6 +34,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public class Bing {
 	private final QueryCacheWrapper qcr;
+	private final boolean replaceTalk = false;
 	
 	/* Doesn't cache queries :'( */
 	private Bing() {
@@ -71,6 +72,12 @@ public class Bing {
 				continue;
 			
 			String pageName = WikipediaURLToName.getPageNameFromURL(url);
+			
+			if (replaceTalk) {
+				url = url.replace("Talk:", "");
+				pageName = pageName.replace("Talk:", "");
+			}
+			
 			return Utils.toSubTopic(pageName, url);
 		}
 		
