@@ -23,6 +23,8 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 
+import org.apache.commons.codec.binary.Base64;
+
 /* Acknowledgements:
  * Bing: For 5000 free queries.
  * Prof. Gravano's E6111 webpage for the pointers to the Bing API and the sample code
@@ -108,7 +110,11 @@ public class Bing {
 		if(propStream != null) {
 			Properties p = new Properties();
 			p.load(propStream);
-			if((accountKeyEnc = p.getProperty("bing.key")) == null) {
+			String accountKey;
+			if((accountKey = p.getProperty("bing.key")) != null) {
+				byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
+				accountKeyEnc = new String(accountKeyBytes);
+			} else {
 				accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
 			}
 		} else {
