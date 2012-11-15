@@ -25,13 +25,14 @@ public class Hierarchy {
 		
 		setModules(new ArrayList<Module>());
 			
+		int count = 0;
 		logger.info("Creating modules...");
 		// TODO: Check redirects so that we're not creating redundant modules
 		for (SubTopic t : topics) {
 			logger.info("Creating module for topic: " + t);
 			Module m = new Module(t);
 			//if (m.titles != null && !m.titles.contains("Mathematics") && !m.synonyms.contains("Mathematics"))
-			if (m.titles != null && !containsSubstring(m.titles, domain) && !containsSubstring(m.synonyms, domain))
+			if (!moduleExists(m) && m.titles != null && !containsSubstring(m.titles, domain) && !containsSubstring(m.synonyms, domain))
 				modules.add(m);
 		}
 			
@@ -43,11 +44,11 @@ public class Hierarchy {
 			}
 		}
 		
-		logger.info("Merging cycles...");
+		//logger.info("Merging cycles...");
 		//mergeCycles();
 		//mergeCycles(2);
 		//mergePairs();
-		removeCycles();
+		//removeCycles();
 		//mergeCycle();
 		//mergeCycles();
 		
@@ -243,6 +244,16 @@ public class Hierarchy {
 	private boolean containsSubstring(List<String> synonyms, String match) {
 		for (String s : synonyms) {
 			if (s.toLowerCase().contains(match.toLowerCase()))
+				return true;
+			if (s.toLowerCase().contains("list of"))
+				return true;
+		}
+		return false;
+	}
+	
+	private boolean moduleExists(Module m) {
+		for (Module existing : modules) {
+			if (existing.sameWiki(m))
 				return true;
 		}
 		return false;
