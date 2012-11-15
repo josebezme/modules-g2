@@ -1,4 +1,4 @@
 modules-g2
 ==========
 
-Compile & Run g2.DigraphTester
+Check out the build and run scripts or just run them.
