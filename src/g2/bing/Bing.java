@@ -15,12 +15,15 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
+
+import org.apache.commons.codec.binary.Base64;
 
 /* Acknowledgements:
  * Bing: For 5000 free queries.
@@ -101,7 +104,23 @@ public class Bing {
 		final String bingURL = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Web?Query=%27"
 				+ encodedQuery + "%27&$top=10&$format=Json";
 
-		String accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+		InputStream propStream = Bing.class.getResourceAsStream("local.properties");
+		String accountKeyEnc;
+		if(propStream != null) {
+			Properties p = new Properties();
+			p.load(propStream);
+			String accountKey;
+			if((accountKey = p.getProperty("bing.key")) != null) {
+				byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
+				accountKeyEnc = new String(accountKeyBytes);
+			} else {
+				accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+			}
+		} else {
+			accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
+		}
+		
+		accountKeyEnc = "Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT06Sk1SYmdlSGZpUHpOTjUzL1RYNzZkTm9WcmZYclQ3aStMMkhGeC95Tk16TT0=";
 		String backupAccountKey = "Yy9iYXVPV0xIS0R1cXpLbldXMEJWd1ZDbUhCWThQcXh4Zytpa3R6cXIzST06Yy9iYXVPV0xIS0R1cXpLbldXMEJWd1ZDbUhCWThQcXh4Zytpa3R6cXIzST0=";
 		URL url = new URL(bingURL);
 		URLConnection urlConnection = url.openConnection();

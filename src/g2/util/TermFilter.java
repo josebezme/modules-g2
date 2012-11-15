@@ -160,7 +160,7 @@ public class TermFilter {
 	};
 	
 	public static void main(String[] args) {
-		String urls[] = {"http://www.math.umn.edu/courses/"};
+		String urls[] = {"http://apps.college.columbia.edu/unify/bulletinSearch.php?school=EN&departmentVar=MECE&header=me.columbia.edu/admin/html/course_header.html&footer=me.columbia.edu/admin/html/course_footer.html"};
 		System.out.println("Checking hosts: " + Arrays.toString(urls));
 		Multimap<String, Course> hosts = C1CourseExtractor.extractCourses(urls);
 		
@@ -205,10 +205,14 @@ public class TermFilter {
 						
 						term = term.replace("/", " and ");
 						
+						// remove leading for.
+						if(term.indexOf("for") == 0) {
+							term = term.substring(3).trim();
+						}
 						// If we left a leading and
 						// from spliting remove it and carry on.
 						if(term.indexOf("and") == 0) {
-							term = term.substring(3);
+							term = term.substring(3).trim();
 							
 							// maybe a trailing and?  maybe....
 						} else if(term.indexOf("and") == Math.max(term.length() - 3, 0)) {
@@ -321,7 +325,7 @@ public class TermFilter {
 			
 		} catch (Exception e) {
 			// gotta catch'em all!
-			logger.error("exception", e);
+			logger.error("exception for term: " + term, e);
 		}
 		
 		
