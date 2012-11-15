@@ -140,14 +140,30 @@ public class WikiPage {
 			System.err.println(e.toString());
 			return redirects;
 		}
-		Element linkSection = doc.select("ul").get(0);
-		Elements links = linkSection.select("a");
+		
+		Elements allTags = doc.select("ul, i");
+		Element ulTag = null;
+		for (int i = 0; i < allTags.size()-1; i++) {
+			Element tag = allTags.get(i);
+			Elements iTags = tag.select("i");
+			if (iTags.size() > 0 && iTags.get(0).attr("class").equals("nosections")) {
+				ulTag = allTags.get(i+1);
+				break;
+			}
+		}
+		
+		if (ulTag == null)
+			return redirects;
+		
+		Elements links = ulTag.select("a");
 
 		for (Element e : links) {
 			
 			if (e.text().matches(".*\\w.*")) {
-				if (!redirects.contains(e.text()))
+				if (!redirects.contains(e.text())) {
 					redirects.add(e.text());
+					//System.out.println(e.text());
+				}
 			}
 		}
 		return redirects;

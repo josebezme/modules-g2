@@ -58,6 +58,11 @@ public class Module extends Hierarchical {
 		  addPrereq(that);
   }
   
+  public int linkScore(Hierarchical that) {
+	  Module m = (Module) that;
+	  return wikiPage.linkScore(m);
+  }
+  
   public String toString() {
 	  String s = removeDisambig(titles.get(0));
 	  for (int i = 1; i < titles.size(); i++)
@@ -188,6 +193,5 @@ public class Module extends Hierarchical {
 			nodes.add(m);
 		
 		Digraph.DigraphToFile("Modules", nodes);
-  }	
-  
+  }  
 }
