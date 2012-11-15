@@ -46,7 +46,7 @@ public class CourseIdUtil {
 		"in"
 	};
 	
-	private static final String ID_SUF = "( )?([0-9]+[a-zA-Z]?)";
+	private static final String ID_SUF = "( )?([0-9]+)";
 
 	private static final Function<String, String> FORMAT_ONE_WORDS = new Function<String, String>() {
 		@Override
@@ -107,61 +107,56 @@ public class CourseIdUtil {
 	public static void main(String[] args) {
 		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
 		Multimap<String, Course> courses = C1CourseExtractor.extractCourses(urls);
-		populateCourseIds(courses);
 		
 		for(String key: courses.keySet()) {
 			logger.debug("host: " + key);
+			populateCourseIds(courses.get(key));
 			for(Course course : courses.get(key)) {
 				logger.debug("\t" + course);
 			}
 		}
 	}
 	
-	public static void populateCourseIds(Multimap<String, Course> hosts) {
-		 for(String host : hosts.keySet()) {
-		// Get all possible Alpha-numeric sequences of 1 or 2 words.
-			logger.debug("host: " + host);
-			Collection<Course> courses = hosts.get(host);
-			Sequence seq = splitSequences(courses);
-	
-			for (String word : seq.oneWord) {
-				int freq = 0;
-	
-				for (String pair : seq.twoWords) {
-					if (pair.contains(word)) {
-						freq++;
-					}
+	public static void populateCourseIds(Collection<Course> courses) {
+		Sequence seq = splitSequences(courses);
+
+		for (String word : seq.oneWord) {
+			int freq = 0;
+
+			for (String pair : seq.twoWords) {
+				if (pair.contains(word)) {
+					freq++;
 				}
-	
-				seq.lineFreq.add(new FreqWrapper(word, freq));
 			}
-			logger.debug("twoWord size: " + seq.twoWords.size());
-			Collections.sort(seq.lineFreq);
+
+			seq.lineFreq.add(new FreqWrapper(word, freq));
+		}
+		logger.debug("twoWord size: " + seq.twoWords.size());
+		Collections.sort(seq.lineFreq);
+		
+		Matcher m;
+		Pattern p;
+		for(FreqWrapper wrap : seq.lineFreq) {
+			p = Pattern.compile(wrap.word + ID_SUF, Pattern.CASE_INSENSITIVE);
 			
-			Matcher m;
-			Pattern p;
-			for(FreqWrapper wrap : seq.lineFreq) {
-				p = Pattern.compile(wrap.word + ID_SUF, Pattern.CASE_INSENSITIVE);
+			if(wrap.freq < 2) { // We only look for common patterns and theses are sorted
+				break;
+			}
+			
+			for(Course c: courses) {
+				m = p.matcher(c.titleElement.text());
 				
-				if(wrap.freq < 2) { // We only look for common patterns and theses are sorted
-					break;
-				}
-				
-				for(Course c: courses) {
-					m = p.matcher(c.titleElement.text());
-					
-					if(m.find()) {
-						String id = m.group();
-						logger.debug("Found id: " + id);
-						if(c.courseId == null) {
-							c.courseId = new CourseId(wrap.word, m.group(2));
-						}
+				if(m.find()) {
+					String id = m.group();
+					logger.debug("Found id: " + id);
+					if(c.courseId == null) {
+						c.courseId = new CourseId(wrap.word, m.group(2));
 					}
 				}
 			}
-	
-			logger.debug(seq);
-		 }
+		}
+
+		logger.debug(seq);
 	}
 
 	private static Sequence splitSequences(Collection<Course> courses) {

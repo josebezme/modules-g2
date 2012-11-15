@@ -14,6 +14,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -24,8 +26,8 @@ public class C1CourseExtractor {
 	}
 
 	public static void main(String[] args) throws Exception {		
-//		String urls[] = Utils.getUrlsFromFile("urls/urls-paragraphs.txt");
-		String urls[] = {"http://www.mce.caltech.edu/academics/course_desc"};
+//		String urls[] = Utils.getUrlsFromFile("urls/me-urls-usable.txt");
+		String urls[] = {"http://apps.college.columbia.edu/unify/bulletinSearch.php?school=EN&departmentVar=MECE&header=me.columbia.edu/admin/html/course_header.html&footer=me.columbia.edu/admin/html/course_footer.html"};
 		System.out.println("Extracting urls : " + Arrays.toString(urls));
 		
 		Multimap<String, Course> titles = extractCourses(urls);
@@ -51,8 +53,9 @@ public class C1CourseExtractor {
 				host = Utils.getHost(url);
 				
 				potentialCourses = process(url);
+				CourseIdUtil.populateCourseIds(potentialCourses);
 				
-				courses.putAll(host, potentialCourses);
+				courses.putAll(host, Iterables.filter(potentialCourses, filterNullIds));
 				
 			} catch (MalformedURLException e) {
 				logger.error("Unable to turn into url: " + url);
@@ -63,11 +66,21 @@ public class C1CourseExtractor {
 			}
 		}
 		
-		CourseIdUtil.populateCourseIds(courses);
 		PrereqUtil.populatePrereqs(courses);
 		
 		return courses;
 	}
+	
+	private static final Predicate<Course> filterNullIds = new Predicate<Course>() {
+		@Override
+		public boolean apply(Course c) {
+			if(c.courseId == null) {
+				return false;
+			}
+			
+			return true;
+		}
+	};
 	
 	private static Set<Course> process(String url) throws IOException {
 		Set<Course> potentialTitles = process(url, "p");
