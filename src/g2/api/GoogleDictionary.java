@@ -38,15 +38,28 @@ public class GoogleDictionary {
 	public static SpeechPart getPartofSpeech(String word) {
 		try {
 			String encodedWord = URLEncoder.encode(word, "UTF-8");
-			
-			URL request = new URL(url + encodedWord);
-	        BufferedReader in = new BufferedReader(new InputStreamReader(request.openStream()));
 
 	        StringBuilder builder = new StringBuilder();
-	        String inputLine;
-	        while ((inputLine = in.readLine()) != null)
-	            builder.append(inputLine);
-	        in.close();
+			
+			String dictCache = DictionaryCache.dc.get(word);
+			if (dictCache != null) {
+				System.out.println("DictCached: " + word);
+				builder.append(dictCache);
+			} else {
+				URL request = new URL(url + encodedWord);
+		        BufferedReader in = new BufferedReader(new InputStreamReader(request.openStream()));
+	
+		        
+				{
+					String inputLine;
+					while ((inputLine = in.readLine()) != null)
+						builder.append(inputLine);
+					in.close();
+					
+					System.out.println("Added To Cache: " + word);
+					DictionaryCache.dc.store(word, builder.toString());
+				}
+			}
 			
 	        Pattern p = Pattern.compile(successRegEx);
 	        Matcher m = p.matcher(builder);
