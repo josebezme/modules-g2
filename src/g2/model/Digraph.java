@@ -20,8 +20,11 @@ public class Digraph {
       w.write("digraph {\n");
       for (Hierarchical to : nodes) {
         w.write("\"" + to.toString() + "\"\n");
-        for (Hierarchical from : to.prereqs())
-          w.write("\"" + from.toString() + "\"->\"" + to.toString() + "\"\n");
+
+        for (Hierarchical from : to.prereqs()) {
+        	int score = to.linkScore(from);
+          w.write("\"" + from.toString() + "\"->\"" + to.toString() + "\" [weight=" + score + ", label=\""+score+"\"]\n");
+        }
       }
       w.write("}\n");
       w.close();
